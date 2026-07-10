@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batch · UAP Question Archive</title>
+
+  <script>(function(){try{if(localStorage.getItem('uap-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/buttons.css">
+  <link rel="stylesheet" href="assets/css/viewer.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <div id="navbar-placeholder"></div>
+
+  <section class="page-hero">
+    <span class="eyebrow">Batch</span>
+    <h1 id="batchTitle">Batch</h1>
+    <p>Pick an exam type to see its sections and question papers.</p>
+  </section>
+
+  <div class="batch" id="examLinks"></div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="assets/js/archive-data.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(location.search);
+      const batchId = params.get("batch");
+      const data = window.UAP_DATA;
+      const batch = data.batches.find(b => b.id === batchId);
+
+      document.getElementById("batchTitle").textContent = batch ? batch.label : "Batch not found";
+
+      const examLinks = document.getElementById("examLinks");
+      if (batch) {
+        examLinks.innerHTML = data.exams.map(exam => `
+          <a href="questions.html?batch=${batch.id}&exam=${exam.id}&section=A">${exam.label}</a>
+        `).join("");
+      } else {
+        examLinks.innerHTML = `<p style="color:var(--text-soft)">Go back to <a href="previous.html" style="color:var(--accent)">Previous Questions</a>.</p>`;
+      }
+    });
+  </script>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/search.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/footer.js"></script>
+</body>
+</html>

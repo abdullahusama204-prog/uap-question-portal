@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Previous Questions · UAP Question Archive</title>
+
+  <script>(function(){try{if(localStorage.getItem('uap-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/buttons.css">
+  <link rel="stylesheet" href="assets/css/viewer.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <div id="navbar-placeholder"></div>
+
+  <section class="page-hero">
+    <span class="eyebrow">Archive</span>
+    <h1>Previous Questions</h1>
+    <p>Browse all previous exam questions organized by batch. Select a batch below to access CT, Mid and Final questions.</p>
+
+    <div class="hero-stats" id="statsRow"></div>
+  </section>
+
+  <section class="batch-container" id="batchContainer"></section>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="assets/js/archive-data.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = window.UAP_DATA;
+      const container = document.getElementById("batchContainer");
+      const stats = document.getElementById("statsRow");
+
+      container.innerHTML = data.batches.map(b => `
+        <div class="batch-card" id="${b.id}">
+          <h2>🎓 ${b.label}</h2>
+          <p>✅ CT Questions</p>
+          <p>✅ Mid Questions</p>
+          <p>✅ Final Questions</p>
+          <a href="batch.html?batch=${b.id}" class="open-btn">Open →</a>
+        </div>
+      `).join("");
+
+      stats.innerHTML = `
+        <div class="stat-card"><h3>${data.batches.length}</h3><span>Batches</span></div>
+        <div class="stat-card"><h3>CT</h3><span>Available</span></div>
+        <div class="stat-card"><h3>Mid</h3><span>Available</span></div>
+        <div class="stat-card"><h3>Final</h3><span>Available</span></div>
+      `;
+    });
+  </script>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/search.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/footer.js"></script>
+</body>
+</html>

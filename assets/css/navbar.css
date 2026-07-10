@@ -1,0 +1,114 @@
+.navbar{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+
+.navbar .logo a{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+.search-box{
+  position: relative;
+  flex: 1;
+  max-width: 360px;
+}
+.search-box input{
+  width: 100%;
+  padding: .6em 1em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: .9rem;
+}
+.search-box input:focus{ border-color: var(--accent); }
+
+.search-results{
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  display: none;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.search-results.open{ display: block; }
+.search-results a{
+  display: flex;
+  flex-direction: column;
+  padding: .7em 1em;
+  font-size: .86rem;
+  border-bottom: 1px solid var(--border);
+}
+.search-results a:last-child{ border-bottom: none; }
+.search-results a:hover{ background: var(--bg); color: var(--accent); }
+.search-results .no-results{
+  padding: .9em 1em;
+  font-size: .84rem;
+  color: var(--text-soft);
+}
+.search-results small{ color: var(--text-soft); font-family: var(--font-mono); font-size: .72rem; }
+
+.nav-links{
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+  margin-left: auto;
+}
+.nav-links a{
+  font-size: .92rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  padding: .3em 0;
+  border-bottom: 2px solid transparent;
+}
+.nav-links a:hover, .nav-links a.active{
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+.nav-links li.profile a{ font-size: 1.15rem; }
+
+.theme-toggle{
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.theme-toggle:hover{ border-color: var(--accent); }
+
+.menu-toggle{
+  display: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .2em .5em;
+  background: var(--bg);
+}

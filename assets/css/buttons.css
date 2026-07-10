@@ -1,0 +1,41 @@
+.pagination{
+  max-width: var(--container);
+  margin: 24px auto 80px;
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+.pagination button{
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .88rem;
+  padding: .7em 1.3em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease;
+}
+.pagination button:hover:not(:disabled){ border-color: var(--accent); color: var(--accent); }
+.pagination button:disabled{ opacity: .4; cursor: not-allowed; }
+.pagination .page-indicator{
+  font-family: var(--font-mono);
+  font-size: .82rem;
+  color: var(--text-soft);
+}
+
+.download-btn{
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .9rem;
+  padding: .8em 1.6em;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+.download-btn:hover{ filter: brightness(1.08); }

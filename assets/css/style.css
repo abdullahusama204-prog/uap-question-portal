@@ -1,0 +1,438 @@
+/* ============================================================
+   UAP Question Archive — Design System
+   Concept: "The Catalog" — a living index-card archive.
+   Every batch, course and photo is a catalog card with a
+   stamped code tab, echoing library ledgers and exam scripts.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  /* ---- Ink & paper (light mode) ---- */
+  --paper:        #EEF0EC;
+  --paper-raised: #FFFFFF;
+  --ink:          #12172A;
+  --ink-soft:     #4B5266;
+  --line:         #D8DBD1;
+
+  /* ---- Accents ---- */
+  --brass:        #B8862F;
+  --brass-soft:   #E7D3A6;
+  --oxblood:      #7A2E2E;
+  --teal:         #2C5A5E;
+
+  /* ---- Semantic ---- */
+  --bg:           var(--paper);
+  --surface:      var(--paper-raised);
+  --text:         var(--ink);
+  --text-soft:    var(--ink-soft);
+  --border:       var(--line);
+  --accent:       var(--brass);
+  --accent-ink:   #3A2A0E;
+  --focus:        var(--teal);
+
+  /* ---- Type ---- */
+  --font-display: 'Fraunces', serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', monospace;
+
+  /* ---- Layout ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --container: 1160px;
+  --shadow-card: 0 1px 2px rgba(18,23,42,.04), 0 8px 24px rgba(18,23,42,.06);
+
+  color-scheme: light;
+}
+
+html[data-theme="dark"]{
+  --bg:        #10141F;
+  --surface:   #181D2E;
+  --text:      #EDEEE8;
+  --text-soft: #A7ACC0;
+  --border:    #2A2F45;
+  --accent:    #D9AE5C;
+  --accent-ink: #1B140A;
+  --focus:     #6FB3B8;
+  color-scheme: dark;
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  transition: background .25s ease, color .25s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+img{ max-width: 100%; display: block; }
+
+a{ color: inherit; text-decoration: none; }
+
+:focus-visible{
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *, *::before, *::after{ animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+h1, h2, h3{
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 .5em;
+  letter-spacing: -.01em;
+}
+
+.eyebrow{
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.eyebrow::before{
+  content: "";
+  width: 18px; height: 1px;
+  background: var(--accent);
+}
+
+.wrap{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============ Buttons ============ */
+.primary-btn, .secondary-btn, .open-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .95rem;
+  padding: .8em 1.4em;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.primary-btn{
+  background: var(--ink);
+  color: var(--paper);
+}
+html[data-theme="dark"] .primary-btn{ background: var(--accent); color: var(--accent-ink); }
+.primary-btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-card); }
+
+.secondary-btn, .open-btn{
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+.secondary-btn:hover, .open-btn:hover{
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ============ Hero (home) ============ */
+.hero{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 96px 24px 64px;
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 48px;
+  align-items: center;
+}
+.hero h1{
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+}
+.hero p{
+  color: var(--text-soft);
+  font-size: 1.08rem;
+  max-width: 46ch;
+}
+.hero-buttons{
+  display: flex;
+  gap: 14px;
+  margin-top: 1.8em;
+  flex-wrap: wrap;
+}
+
+/* Catalog stack — signature visual on the hero */
+.catalog-stack{
+  position: relative;
+  height: 320px;
+}
+.catalog-tile{
+  position: absolute;
+  width: 240px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+}
+.catalog-tile .tab{
+  display: inline-block;
+  font-size: .68rem;
+  letter-spacing: .08em;
+  color: var(--accent-ink);
+  background: var(--brass-soft);
+  padding: .25em .6em;
+  border-radius: 999px;
+  margin-bottom: .8em;
+}
+html[data-theme="dark"] .catalog-tile .tab{ color: var(--accent-ink); background: var(--accent); }
+.catalog-tile h4{
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin: 0 0 .2em;
+  font-weight: 600;
+}
+.catalog-tile p{
+  margin: 0;
+  color: var(--text-soft);
+  font-size: .78rem;
+}
+.catalog-tile:nth-child(1){ top: 0; left: 10px; transform: rotate(-4deg); z-index: 3; }
+.catalog-tile:nth-child(2){ top: 70px; left: 130px; transform: rotate(3deg); z-index: 2; }
+.catalog-tile:nth-child(3){ top: 170px; left: 30px; transform: rotate(-2deg); z-index: 1; }
+
+/* ============ Feature cards (home) ============ */
+.features{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 24px 24px 96px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.feature-card{
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 28px 26px 24px;
+  box-shadow: var(--shadow-card);
+}
+.feature-card::before{
+  content: "";
+  position: absolute;
+  top: 0; left: 22px;
+  width: 34px; height: 6px;
+  background: var(--accent);
+  border-radius: 0 0 4px 4px;
+}
+.feature-card h2{ font-size: 1.25rem; margin-top: 6px; }
+.feature-card p{ color: var(--text-soft); font-size: .94rem; }
+.feature-card a{
+  font-family: var(--font-mono);
+  font-size: .82rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ============ Page hero (inner pages) ============ */
+.page-hero{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 72px 24px 32px;
+}
+.page-hero h1{ font-size: clamp(1.8rem, 3vw, 2.5rem); }
+.page-hero p{ color: var(--text-soft); max-width: 62ch; }
+
+.hero-stats{
+  display: flex;
+  gap: 14px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.stat-card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  min-width: 100px;
+  text-align: center;
+}
+.stat-card h3{
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 1.3rem;
+  margin: 0;
+}
+.stat-card span{
+  font-size: .74rem;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* ============ Batch cards (previous.html) ============ */
+.batch-container{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 16px 24px 96px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 18px;
+}
+.batch-card{
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  box-shadow: var(--shadow-card);
+  transition: transform .15s ease, border-color .15s ease;
+}
+.batch-card:hover{ transform: translateY(-3px); border-color: var(--accent); }
+.batch-card::before{
+  content: "";
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.batch-card h2{ font-size: 1.1rem; }
+.batch-card p{
+  margin: .2em 0;
+  font-size: .86rem;
+  color: var(--text-soft);
+}
+
+/* Simple links list used on batch11.html / ct11.html (CT/Mid/Final, Section A-D) */
+.batch{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 16px 24px 96px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.batch a{
+  font-family: var(--font-mono);
+  font-size: .9rem;
+  font-weight: 600;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1em 1.6em;
+  transition: border-color .15s ease, color .15s ease;
+}
+.batch a:hover{ border-color: var(--accent); color: var(--accent); }
+
+/* ============ Gallery ============ */
+.gallery-container{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 16px 24px 96px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+}
+.gallery-card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+}
+.gallery-card img{
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+.gallery-card:hover img{ transform: scale(1.04); }
+.gallery-info{ padding: 14px 16px; }
+.gallery-info h3{ font-size: .98rem; margin-bottom: .1em; }
+.gallery-info p{ margin: 0; font-size: .8rem; color: var(--text-soft); }
+
+/* ============ Question gallery (section pages) ============ */
+.question-gallery{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 16px 24px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.question-gallery img{
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: zoom-in;
+  background: var(--surface);
+}
+
+/* ============ Footer ============ */
+.footer{
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  margin-top: 40px;
+}
+.footer-container{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 56px 24px 32px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 32px;
+}
+.footer-about h2{ font-size: 1.1rem; }
+.footer-about p{ color: var(--text-soft); font-size: .88rem; max-width: 40ch; }
+.footer-links h3, .footer-contact h3{
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: .8em;
+}
+.footer-links ul{ list-style: none; padding: 0; margin: 0; display: grid; gap: .55em; }
+.footer-links a{ font-size: .9rem; }
+.footer-links a:hover{ color: var(--accent); }
+.footer-contact p{ font-size: .9rem; margin: .3em 0; color: var(--text-soft); }
+.footer-bottom{
+  border-top: 1px solid var(--border);
+  padding: 18px 24px;
+  text-align: center;
+  font-size: .78rem;
+  color: var(--text-soft);
+}
+
+/* ============ Generic inner page (about/contact) ============ */
+.simple-page{
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 96px 24px 96px;
+}
+.simple-page p{ color: var(--text-soft); font-size: 1.02rem; }
+.contact-card{
+  margin-top: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: grid;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: .92rem;
+}

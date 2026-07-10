@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questions · UAP Question Archive</title>
+
+  <script>(function(){try{if(localStorage.getItem('uap-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/buttons.css">
+  <link rel="stylesheet" href="assets/css/viewer.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .section-nav{ display:flex; gap:10px; max-width:var(--container); margin:0 auto; padding:0 24px 8px; flex-wrap:wrap; }
+    .section-nav a{
+      font-family: var(--font-mono); font-size:.82rem; font-weight:600;
+      padding:.5em 1em; border-radius:999px; border:1px solid var(--border); color:var(--text-soft);
+    }
+    .section-nav a.active, .section-nav a:hover{ border-color:var(--accent); color:var(--accent); }
+  </style>
+</head>
+<body>
+
+  <div id="navbar-placeholder"></div>
+
+  <section class="page-hero">
+    <span class="eyebrow">Question Papers</span>
+    <h1 id="questionTitle">Questions</h1>
+    <p id="questionSubtitle">Select a batch, exam and section from Previous Questions.</p>
+  </section>
+
+  <nav class="section-nav" id="sectionNav"></nav>
+
+  <div class="question-gallery" id="questionGrid"></div>
+
+  <div class="pagination">
+    <button id="prevPage">⬅ Previous</button>
+    <span class="page-indicator" id="pageIndicator"></span>
+    <button id="nextPage">Next ➡</button>
+  </div>
+
+  <!-- Full Screen Viewer -->
+  <div class="viewer" id="viewer">
+    <button class="viewer-close" id="viewerClose">✕</button>
+    <button class="viewer-nav viewer-prev" id="viewerPrev">‹</button>
+    <img id="fullImage" alt="Question Image">
+    <button class="viewer-nav viewer-next" id="viewerNext">›</button>
+    <div class="viewer-toolbar">
+      <a id="downloadLink" href="#" download>
+        <button class="download-btn">⬇ Download</button>
+      </a>
+    </div>
+    <p class="viewer-caption" id="viewerCaption"></p>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="assets/js/archive-data.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/search.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/footer.js"></script>
+  <script src="assets/js/question-viewer.js"></script>
+</body>
+</html>

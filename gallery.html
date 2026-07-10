@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery · UAP Question Archive</title>
+
+  <script>(function(){try{if(localStorage.getItem('uap-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/buttons.css">
+  <link rel="stylesheet" href="assets/css/viewer.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <div id="navbar-placeholder"></div>
+
+  <section class="page-hero">
+    <span class="eyebrow">Campus Life</span>
+    <h1>📸 UAP Photo Gallery</h1>
+    <p>Explore memorable moments from different batches, events and university activities.</p>
+  </section>
+
+  <div class="gallery-container" id="galleryContainer"></div>
+
+  <!-- Full Screen Viewer -->
+  <div class="viewer" id="viewer">
+    <button class="viewer-close" id="viewerClose">✕</button>
+    <button class="viewer-nav viewer-prev" id="viewerPrev">‹</button>
+    <img id="fullImage" alt="Gallery Image">
+    <button class="viewer-nav viewer-next" id="viewerNext">›</button>
+    <p class="viewer-caption" id="viewerCaption"></p>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="assets/js/archive-data.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/search.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/footer.js"></script>
+  <script src="assets/js/gallery.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+.viewer{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(10,12,20,.92);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 40px 20px;
+}
+.viewer.open{ display: flex; }
+
+.viewer img{
+  max-width: min(90vw, 900px);
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  transition: transform .2s ease;
+  cursor: zoom-in;
+  background: #fff;
+}
+.viewer img.zoomed{ transform: scale(1.6); cursor: zoom-out; }
+
+.viewer-close{
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  font-size: 1.6rem;
+  color: #fff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.viewer-nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.12);
+  border: none;
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.viewer-nav:hover{ background: rgba(255,255,255,.22); }
+.viewer-prev{ left: 20px; }
+.viewer-next{ right: 20px; }
+
+.viewer-toolbar{
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.viewer-caption{
+  color: #d8dbe4;
+  font-family: var(--font-mono);
+  font-size: .8rem;
+  margin-top: 8px;
+}
