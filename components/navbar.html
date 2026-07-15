@@ -11,15 +11,27 @@
 
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
 
-  <div class="menu-toggle" id="menuToggle">☰</div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
 
-  <ul class="nav-links" id="navLinks">
-    <li><a href="index.html" data-page="index.html">Home</a></li>
-    <li><a href="previous.html" data-page="previous.html">Previous Questions</a></li>
-    <li><a href="gallery.html" data-page="gallery.html">Gallery</a></li>
-    <li><a href="about.html" data-page="about.html">About</a></li>
-    <li><a href="contact.html" data-page="contact.html">Contact</a></li>
-    <li class="profile"><a href="#" title="Sign in (coming soon)">👤</a></li>
-  </ul>
+  <div class="nav-backdrop" id="navBackdrop"></div>
+
+  <div class="nav-drawer" id="navLinks">
+
+    <div class="nav-drawer-header">
+      <span class="nav-drawer-title">🎓 Menu</span>
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html" data-page="index.html">Home</a></li>
+      <li><a href="previous.html" data-page="previous.html">Previous Questions</a></li>
+      <li><a href="gallery.html" data-page="gallery.html">Gallery</a></li>
+      <li><a href="about.html" data-page="about.html">About</a></li>
+      <li><a href="contact.html" data-page="contact.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-drawer-footer" id="authArea"></div>
+
+  </div>
 
 </nav>

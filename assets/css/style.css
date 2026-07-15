@@ -136,6 +136,7 @@ h1, h2, h3{
 }
 html[data-theme="dark"] .primary-btn{ background: var(--accent); color: var(--accent-ink); }
 .primary-btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-card); }
+.primary-btn:active, .secondary-btn:active, .open-btn:active{ transform: scale(.97); }
 
 .secondary-btn, .open-btn{
   background: transparent;
@@ -417,6 +418,101 @@ html[data-theme="dark"] .catalog-tile .tab{ color: var(--accent-ink); background
   font-size: .78rem;
   color: var(--text-soft);
 }
+
+/* ============ Sign-in gate (protected pages) ============ */
+.auth-gate{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: var(--bg);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.auth-gate.open{ display: flex; }
+.gate-card{
+  max-width: 420px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 40px 32px;
+}
+.gate-card h2{ font-size: 1.4rem; margin-top: .3em; }
+.gate-card p{ color: var(--text-soft); margin-bottom: 1.6em; }
+
+.spinner{
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 14px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: uap-spin .7s linear infinite;
+}
+@keyframes uap-spin{ to{ transform: rotate(360deg); } }
+
+/* ============ Empty states ============ */
+.empty-state{
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-soft);
+}
+.empty-state .empty-icon{ font-size: 2rem; display: block; margin-bottom: .5em; }
+
+/* ============ Fade-in for dynamically rendered cards ============ */
+@keyframes uap-fade-in-up{
+  from{ opacity: 0; transform: translateY(10px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+.fade-in-item{
+  animation: uap-fade-in-up .45s ease both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+/* ============ Toasts ============ */
+.toast-container{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: min(360px, calc(100vw - 40px));
+}
+.toast{
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  padding: 14px 16px;
+  font-size: .88rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.toast.toast-enter{ opacity: 1; transform: translateY(0); }
+.toast.toast-leave{ opacity: 0; transform: translateY(8px); }
+.toast-success{ border-left-color: var(--teal); }
+.toast-error{ border-left-color: var(--oxblood); }
+.toast-message{ flex: 1; color: var(--text); }
+.toast-close{
+  border: none;
+  background: transparent;
+  color: var(--text-soft);
+  cursor: pointer;
+  font-size: .85rem;
+  line-height: 1;
+}
+.toast-close:hover{ color: var(--text); }
 
 /* ============ Generic inner page (about/contact) ============ */
 .simple-page{

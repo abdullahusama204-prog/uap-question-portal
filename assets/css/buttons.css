@@ -20,6 +20,7 @@
   transition: border-color .15s ease, color .15s ease;
 }
 .pagination button:hover:not(:disabled){ border-color: var(--accent); color: var(--accent); }
+.pagination button:active:not(:disabled){ transform: scale(.96); }
 .pagination button:disabled{ opacity: .4; cursor: not-allowed; }
 .pagination .page-indicator{
   font-family: var(--font-mono);
@@ -39,3 +40,4 @@
   cursor: pointer;
 }
 .download-btn:hover{ filter: brightness(1.08); }
+.download-btn:active{ transform: scale(.96); }

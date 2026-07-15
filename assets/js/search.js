@@ -44,7 +44,10 @@ window.UAPSearch = (function () {
 
     const index = buildIndex();
 
+    let activeIndex = -1;
+
     function render(matches) {
+      activeIndex = -1;
       if (!matches.length) {
         resultsBox.innerHTML = `<div class="no-results">No matches found.</div>`;
         resultsBox.classList.add("open");
@@ -59,6 +62,15 @@ window.UAPSearch = (function () {
       resultsBox.classList.add("open");
     }
 
+    function setActive(index) {
+      const items = resultsBox.querySelectorAll("a");
+      if (!items.length) return;
+      items.forEach(el => el.classList.remove("highlighted"));
+      activeIndex = (index + items.length) % items.length;
+      items[activeIndex].classList.add("highlighted");
+      items[activeIndex].scrollIntoView({ block: "nearest" });
+    }
+
     input.addEventListener("input", () => {
       const q = input.value.trim().toLowerCase();
       if (!q) { resultsBox.classList.remove("open"); resultsBox.innerHTML = ""; return; }
@@ -69,8 +81,12 @@ window.UAPSearch = (function () {
     });
 
     input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && resultsBox.firstElementChild && resultsBox.firstElementChild.tagName === "A") {
-        window.location.href = resultsBox.firstElementChild.getAttribute("href");
+      const items = resultsBox.querySelectorAll("a");
+      if (e.key === "ArrowDown") { e.preventDefault(); if (items.length) setActive(activeIndex + 1); }
+      if (e.key === "ArrowUp") { e.preventDefault(); if (items.length) setActive(activeIndex - 1); }
+      if (e.key === "Enter") {
+        const target = activeIndex >= 0 ? items[activeIndex] : items[0];
+        if (target) window.location.href = target.getAttribute("href");
       }
       if (e.key === "Escape") { resultsBox.classList.remove("open"); input.blur(); }
     });

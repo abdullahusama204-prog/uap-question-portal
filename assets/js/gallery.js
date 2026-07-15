@@ -10,26 +10,34 @@ document.addEventListener("DOMContentLoaded", () => {
   const photos = (window.UAP_DATA && window.UAP_DATA.gallery) || [];
   let currentIndex = 0;
   let zoomed = false;
+  let lastFocused = null;
 
   // Render cards
-  container.innerHTML = photos.map((p, i) => `
-    <div class="gallery-card" data-index="${i}">
+  container.innerHTML = photos.length ? photos.map((p, i) => `
+    <div class="gallery-card fade-in-item" style="--i:${i}" data-index="${i}" tabindex="0" role="button" aria-label="Open ${p.title}">
       <img src="${p.src}" alt="${p.title}" loading="lazy">
       <div class="gallery-info">
         <h3>${p.title}</h3>
         <p>${p.caption || ""}</p>
       </div>
     </div>
-  `).join("");
+  `).join("") : `
+    <div class="empty-state">
+      <span class="empty-icon">🖼️</span>
+      <p>No photos added yet. Check back soon!</p>
+    </div>`;
 
   const fullImage = document.getElementById("fullImage");
   const caption = document.getElementById("viewerCaption");
+  const closeBtn = document.getElementById("viewerClose");
 
   function openViewer(index) {
+    lastFocused = document.activeElement;
     currentIndex = index;
     zoomed = false;
     updateImage();
     viewer.classList.add("open");
+    if (closeBtn) closeBtn.focus();
   }
 
   function updateImage() {
@@ -41,7 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (caption) caption.textContent = `${photo.title}${photo.caption ? " · " + photo.caption : ""}`;
   }
 
-  function closeViewer() { viewer.classList.remove("open"); }
+  function closeViewer() {
+    viewer.classList.remove("open");
+    if (lastFocused) lastFocused.focus();
+  }
   function showNext() { currentIndex = (currentIndex + 1) % photos.length; updateImage(); }
   function showPrev() { currentIndex = (currentIndex - 1 + photos.length) % photos.length; updateImage(); }
 
@@ -51,7 +62,14 @@ document.addEventListener("DOMContentLoaded", () => {
     openViewer(Number(card.dataset.index));
   });
 
-  const closeBtn = document.getElementById("viewerClose");
+  container.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const card = e.target.closest(".gallery-card");
+    if (!card) return;
+    e.preventDefault();
+    openViewer(Number(card.dataset.index));
+  });
+
   const nextBtn = document.getElementById("viewerNext");
   const prevBtn = document.getElementById("viewerPrev");
   if (closeBtn) closeBtn.addEventListener("click", closeViewer);

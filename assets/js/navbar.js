@@ -23,13 +23,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Mobile menu toggle
+  // Mobile drawer (menu)
   const menuToggle = document.getElementById("menuToggle");
   const navLinks = document.getElementById("navLinks");
-  if (menuToggle && navLinks) {
-    menuToggle.addEventListener("click", () => {
-      navLinks.classList.toggle("open");
-    });
+  const drawerClose = document.getElementById("drawerClose");
+  const navBackdrop = document.getElementById("navBackdrop");
+  let lastFocused = null;
+
+  function openDrawer() {
+    lastFocused = document.activeElement;
+    if (navLinks) navLinks.classList.add("open");
+    if (navBackdrop) navBackdrop.classList.add("open");
+    document.body.classList.add("no-scroll");
+    if (drawerClose) drawerClose.focus();
+  }
+  function closeDrawer() {
+    if (navLinks) navLinks.classList.remove("open");
+    if (navBackdrop) navBackdrop.classList.remove("open");
+    document.body.classList.remove("no-scroll");
+    if (lastFocused) lastFocused.focus();
+  }
+
+  if (menuToggle) menuToggle.addEventListener("click", openDrawer);
+  if (drawerClose) drawerClose.addEventListener("click", closeDrawer);
+  if (navBackdrop) navBackdrop.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+  document.querySelectorAll(".nav-links a").forEach(link => {
+    link.addEventListener("click", closeDrawer);
+  });
+
+  // Subtle elevation once the page is scrolled
+  const navbarEl = document.querySelector(".navbar");
+  if (navbarEl) {
+    const updateScrollShadow = () => {
+      navbarEl.classList.toggle("scrolled", window.scrollY > 4);
+    };
+    updateScrollShadow();
+    window.addEventListener("scroll", updateScrollShadow, { passive: true });
   }
 
   // Theme toggle (defined in theme.js)
@@ -37,6 +67,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Smart search (defined in search.js)
   if (window.UAPSearch) window.UAPSearch.init();
+
+  // Auth / profile area (defined in auth.js)
+  if (window.UAPAuth) window.UAPAuth.bind();
 
   document.dispatchEvent(new Event("navbarLoaded"));
 });

@@ -57,9 +57,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const prevPageBtn = document.getElementById("prevPage");
   const nextPageBtn = document.getElementById("nextPage");
 
+  let lastFocused = null;
+
   function renderPage() {
     if (!images.length) {
-      grid.innerHTML = `<p style="color:var(--text-soft)">No questions uploaded for this section yet.</p>`;
+      grid.innerHTML = `
+        <div class="empty-state">
+          <span class="empty-icon">📄</span>
+          <p>No questions uploaded for this section yet.</p>
+        </div>`;
       if (pageIndicator) pageIndicator.textContent = "";
       if (prevPageBtn) prevPageBtn.disabled = true;
       if (nextPageBtn) nextPageBtn.disabled = true;
@@ -71,7 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageImages = images.slice(start, start + PER_PAGE);
 
     grid.innerHTML = pageImages.map((img, i) => `
-      <img src="${img.src}" alt="${img.title}" loading="lazy" data-index="${start + i}">
+      <img src="${img.src}" alt="${img.title}" loading="lazy" tabindex="0" role="button"
+           aria-label="Open ${img.title}" class="fade-in-item" style="--i:${i}" data-index="${start + i}">
     `).join("");
 
     if (pageIndicator) pageIndicator.textContent = `Page ${page + 1} of ${totalPages}`;
@@ -80,10 +87,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openViewer(index) {
+    lastFocused = document.activeElement;
     currentIndex = index;
     zoomed = false;
     updateImage();
     viewer.classList.add("open");
+    const closeBtn = document.getElementById("viewerClose");
+    if (closeBtn) closeBtn.focus();
   }
 
   function updateImage() {
@@ -99,13 +109,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function closeViewer() { viewer.classList.remove("open"); }
+  function closeViewer() {
+    viewer.classList.remove("open");
+    if (lastFocused) lastFocused.focus();
+  }
   function showNext() { currentIndex = (currentIndex + 1) % images.length; updateImage(); }
   function showPrev() { currentIndex = (currentIndex - 1 + images.length) % images.length; updateImage(); }
 
   grid.addEventListener("click", (e) => {
     const img = e.target.closest("img[data-index]");
     if (!img) return;
+    openViewer(Number(img.dataset.index));
+  });
+
+  grid.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const img = e.target.closest("img[data-index]");
+    if (!img) return;
+    e.preventDefault();
     openViewer(Number(img.dataset.index));
   });
 

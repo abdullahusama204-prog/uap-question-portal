@@ -37,7 +37,7 @@ window.UAP_DATA = {
   // Example key: "11-ct-A"
   questions: {
     "11-ct-A": [
-      { src: "assets/images/questions/11-ct-A-1.jfif", title: "CT1 - Question 1" }
+      { src: "assets/images/questions/11-ct-A-1.jpg", title: "CT1 - Question 1" }
     ]
     // Add more like:
     // "11-ct-B": [ { src: "assets/images/questions/11-ct-B-1.jpg", title: "..." } ],
