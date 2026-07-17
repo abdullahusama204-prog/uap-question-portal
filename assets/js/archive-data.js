@@ -33,28 +33,64 @@ window.UAP_DATA = {
     { id: "D", label: "Section D" }
   ],
 
-  // Question images, keyed as "batch-exam-section" -> array of {src, title}
+  // Question images, keyed as "batch-exam-section" -> array of {src, title, date}
+  // `date` format: "YYYY-MM-DD" (the exam date, or upload date — your choice).
+  // Newest date shows first automatically.
   // Example key: "11-ct-A"
   questions: {
     "11-ct-A": [
-      { src: "assets/images/questions/11-ct-A-1.jpg", title: "CT1 - Question 1" }
+      { src: "assets/images/questions/11-ct-A-1.jpg", title: "CT1 - Question 1", date: "2026-02-05" }
     ]
     // Add more like:
-    // "11-ct-B": [ { src: "assets/images/questions/11-ct-B-1.jpg", title: "..." } ],
+    // "11-ct-B": [ { src: "assets/images/questions/11-ct-B-1.jpg", title: "...", date: "2026-02-05" } ],
   },
 
   // Gallery photos shown on gallery.html
+  // `date` format: "YYYY-MM-DD" — photos with the SAME date are grouped
+  // together automatically; different dates get their own section
+  // (newest date first).
   gallery: [
-    { src: "assets/images/gallery1.jpg", title: "Batch 1.1 Orientation", caption: "2026 Memories" },
-    { src: "assets/images/gallery2.jpg", title: "Batch 1.2 Campus Life", caption: "Student Activities" },
-    { src: "assets/images/gallery3.jpg", title: "Batch 2.1", caption: "Seminar Program" },
-    { src: "assets/images/gallery4.jpg", title: "Batch 2.2", caption: "Workshop" }
+    { src: "assets/images/gallery1.jpg", title: "Orientation Day 2026", caption: "Batch 1.1 · Welcome Session", date: "2026-01-10" },
+    { src: "assets/images/gallery2.jpg", title: "Orientation Day 2026", caption: "Batch 1.2 · Welcome Session", date: "2026-01-10" },
+    { src: "assets/images/gallery3.jpg", title: "Inter-Batch Cultural Festival", caption: "Music, food & performances", date: "2026-02-20" },
+    { src: "assets/images/gallery4.jpg", title: "Convocation Ceremony", caption: "Class of 2026", date: "2026-03-15" }
   ]
 
 };
 
-// Helper: lookup questions for a given batch/exam/section
+// Helper: lookup questions for a given batch/exam/section, newest date first
 window.UAP_DATA.getQuestions = function (batch, exam, section) {
   const key = `${batch}-${exam}-${section}`;
-  return window.UAP_DATA.questions[key] || [];
+  const list = window.UAP_DATA.questions[key] || [];
+  return [...list].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+};
+
+// Helper: format a "YYYY-MM-DD" string as "5 February 2026"; falls back to the raw string
+window.UAP_DATA.formatDate = function (dateStr) {
+  if (!dateStr) return "";
+  const parsed = new Date(dateStr);
+  if (isNaN(parsed)) return dateStr;
+  return parsed.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+};
+
+// Helper: group gallery photos by date, newest date first.
+// Returns [{ date: "2026-03-02", label: "2 March 2026", photos: [...] }, ...]
+window.UAP_DATA.getGalleryGroups = function () {
+  const groups = {};
+  (window.UAP_DATA.gallery || []).forEach((photo) => {
+    const key = photo.date || "Undated";
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(photo);
+  });
+
+  return Object.keys(groups)
+    .sort((a, b) => new Date(b) - new Date(a)) // newest first
+    .map((date) => {
+      let label = date;
+      const parsed = new Date(date);
+      if (!isNaN(parsed)) {
+        label = parsed.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+      }
+      return { date, label, photos: groups[date] };
+    });
 };

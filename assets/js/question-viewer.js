@@ -59,6 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let lastFocused = null;
 
+  const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23EEF0EC'/%3E%3Ccircle cx='200' cy='118' r='38' fill='%23D8DBD1'/%3E%3Crect x='130' y='172' width='140' height='14' rx='7' fill='%23D8DBD1'/%3E%3Crect x='155' y='195' width='90' height='10' rx='5' fill='%23D8DBD1'/%3E%3C/svg%3E";
+
   function renderPage() {
     if (!images.length) {
       grid.innerHTML = `
@@ -77,8 +79,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageImages = images.slice(start, start + PER_PAGE);
 
     grid.innerHTML = pageImages.map((img, i) => `
-      <img src="${img.src}" alt="${img.title}" loading="lazy" tabindex="0" role="button"
-           aria-label="Open ${img.title}" class="fade-in-item" style="--i:${i}" data-index="${start + i}">
+      <div class="question-thumb fade-in-item" style="--i:${i}">
+        <img src="${img.src}" alt="${img.title}" loading="lazy" tabindex="0" role="button"
+             aria-label="Open ${img.title}" data-index="${start + i}"
+             onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}';this.style.objectFit='contain';this.style.padding='16px';">
+        ${img.date ? `<span class="thumb-date">${data.formatDate(img.date)}</span>` : ""}
+      </div>
     `).join("");
 
     if (pageIndicator) pageIndicator.textContent = `Page ${page + 1} of ${totalPages}`;
@@ -99,10 +105,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateImage() {
     const img = images[currentIndex];
     if (!img) return;
+    fullImage.onerror = () => {
+      fullImage.onerror = null;
+      fullImage.src = PLACEHOLDER_IMG;
+      fullImage.style.background = "#fff";
+    };
+    fullImage.style.background = "";
     fullImage.src = img.src;
     fullImage.alt = img.title;
     fullImage.classList.remove("zoomed");
-    if (caption) caption.textContent = img.title;
+    if (caption) caption.textContent = img.date ? `${img.title} · ${data.formatDate(img.date)}` : img.title;
     if (downloadLink) {
       downloadLink.href = img.src;
       downloadLink.setAttribute("download", "");

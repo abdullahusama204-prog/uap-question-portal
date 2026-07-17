@@ -34,13 +34,23 @@ archive is now driven by one data file and a handful of dynamic pages.
 under `questions`:
 ```js
 "12-mid-B": [
-  { src: "assets/images/questions/12-mid-B-1.jpg", title: "Mid - Question 1" }
+  { src: "assets/images/questions/12-mid-B-1.jpg", title: "Mid - Question 1", date: "2026-04-12" }
 ],
 ```
-The key is `"<batchId>-<examId>-<sectionId>"`. No new HTML file, ever.
+The key is `"<batchId>-<examId>-<sectionId>"`. `date` is optional but
+recommended — it's shown as a small badge on the thumbnail and in the
+full viewer, and questions are automatically sorted newest-first. No new
+HTML file, ever.
 
 **Add a gallery photo** — add an object to the `gallery` array in the same
-file.
+file, including a `date` (format `"YYYY-MM-DD"`):
+```js
+{ src: "assets/images/graduation.jpg", title: "Convocation 2026", caption: "Batch 4.1", date: "2026-02-14" }
+```
+Photos that share the exact same `date` are grouped under one heading on
+`gallery.html`; a different date gets its own section. Groups are shown
+newest date first. The gallery viewer also has a **Download** button now,
+same as the question viewer.
 
 **Add a whole new batch** — add one object to the `batches` array. It
 instantly gets a card on `previous.html` and full CT/Mid/Final/section
