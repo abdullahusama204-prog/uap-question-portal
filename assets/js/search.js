@@ -31,6 +31,7 @@ window.UAPSearch = (function () {
     });
 
     index.push({ title: "Photo Gallery", subtitle: "Campus photos", url: "gallery.html" });
+    index.push({ title: "My Bookmarks", subtitle: "Saved question sections", url: "bookmarks.html" });
     index.push({ title: "About", subtitle: "About this archive", url: "about.html" });
     index.push({ title: "Contact", subtitle: "Get in touch", url: "contact.html" });
 

@@ -166,5 +166,29 @@ document.addEventListener("DOMContentLoaded", () => {
   if (prevPageBtn) prevPageBtn.addEventListener("click", () => { page--; renderPage(); });
   if (nextPageBtn) nextPageBtn.addEventListener("click", () => { page++; renderPage(); });
 
+  // Bookmark this section
+  const bookmarkBtn = document.getElementById("bookmarkBtn");
+  const bookmarkId = (batchId && examId && sectionId) ? `${batchId}-${examId}-${sectionId}` : null;
+
+  function updateBookmarkBtn() {
+    if (!bookmarkBtn || !bookmarkId || !window.UAPBookmarks) return;
+    const saved = window.UAPBookmarks.isBookmarked(bookmarkId);
+    bookmarkBtn.textContent = saved ? "★ Bookmarked" : "☆ Bookmark this section";
+    bookmarkBtn.classList.toggle("active", saved);
+  }
+
+  if (bookmarkBtn && bookmarkId) {
+    bookmarkBtn.style.display = "inline-flex";
+    bookmarkBtn.addEventListener("click", async () => {
+      await window.UAPBookmarks.toggle(bookmarkId, {
+        label: (batch && exam && section) ? `${batch.label} · ${exam.label} · ${section.label}` : bookmarkId,
+        url: `questions.html?batch=${batchId}&exam=${examId}&section=${sectionId}`
+      });
+      updateBookmarkBtn();
+    });
+    document.addEventListener("bookmarksLoaded", updateBookmarkBtn);
+    updateBookmarkBtn();
+  }
+
   renderPage();
 });

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#B8862F">
+  <title>My Bookmarks · UAP Question Archive</title>
+
+  <script>(function(){try{if(localStorage.getItem('uap-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/buttons.css">
+  <link rel="stylesheet" href="assets/css/viewer.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .remove-bookmark-btn{
+      margin-top: 10px;
+      border: none;
+      background: transparent;
+      color: var(--oxblood);
+      font-size: .8rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      cursor: pointer;
+      padding: 0;
+    }
+    .remove-bookmark-btn:hover{ text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div id="navbar-placeholder"></div>
+  <div class="auth-gate" id="authGate"></div>
+
+  <section class="page-hero">
+    <span class="eyebrow">Your Library</span>
+    <h1>🔖 My Bookmarks</h1>
+    <p>Saved question sections for quick access, synced to your account.</p>
+  </section>
+
+  <section class="batch-container" id="bookmarksContainer"></section>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="assets/js/archive-data.js"></script>
+
+  <!-- Firebase (Authentication + Bookmarks) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/toast.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", () => { if (window.UAPAuth) window.UAPAuth.requireAuth(); });</script>
+  <script src="assets/js/bookmarks.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/search.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/footer.js"></script>
+
+  <script>
+    function relativeTime(ts) {
+      if (!ts) return "";
+      const diffMs = Date.now() - ts;
+      const mins = Math.floor(diffMs / 60000);
+      if (mins < 1) return "এইমাত্র";
+      if (mins < 60) return `${mins} মিনিট আগে`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours} ঘণ্টা আগে`;
+      const days = Math.floor(hours / 24);
+      if (days < 30) return `${days} দিন আগে`;
+      return new Date(ts).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+    }
+
+    function renderBookmarks() {
+      const container = document.getElementById("bookmarksContainer");
+      if (!container || !window.UAPBookmarks) return;
+      const items = window.UAPBookmarks.getAll();
+
+      if (!items.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <span class="empty-icon">🔖</span>
+            <p>এখনো কিছু bookmark করোনি।</p>
+            <a href="previous.html" class="secondary-btn" style="margin-top:.8em;">📚 Previous Questions দেখো</a>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = items.map((item, i) => `
+        <div class="batch-card fade-in-item" style="--i:${i}">
+          <h2>⭐ ${item.label}</h2>
+          <p style="font-size:.78rem;">Saved ${relativeTime(item.savedAt)}</p>
+          <a href="${item.url}" class="open-btn">Open →</a>
+          <br>
+          <button class="remove-bookmark-btn" data-id="${item.id}">Remove</button>
+        </div>
+      `).join("");
+
+      container.querySelectorAll(".remove-bookmark-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          await window.UAPBookmarks.toggle(btn.dataset.id, {});
+          renderBookmarks();
+        });
+      });
+    }
+
+    function renderLoading() {
+      const container = document.getElementById("bookmarksContainer");
+      if (!container) return;
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="spinner"></div>
+          <p>Loading your bookmarks…</p>
+        </div>`;
+    }
+
+    document.addEventListener("bookmarksLoaded", renderBookmarks);
+    document.addEventListener("DOMContentLoaded", renderLoading);
+  </script>
+</body>
+</html>

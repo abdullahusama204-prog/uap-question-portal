@@ -263,6 +263,29 @@ html[data-theme="dark"] .catalog-tile .tab{ color: var(--accent-ink); background
   margin-top: 28px;
   flex-wrap: wrap;
 }
+
+.bookmark-btn{
+  display: none;
+  align-items: center;
+  gap: .5em;
+  margin-top: 18px;
+  padding: .65em 1.3em;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: .88rem;
+  cursor: pointer;
+}
+.bookmark-btn:hover{ border-color: var(--accent); color: var(--accent); }
+.bookmark-btn:active{ transform: scale(.96); }
+.bookmark-btn.active{
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
 .stat-card{
   background: var(--surface);
   border: 1px solid var(--border);

@@ -78,17 +78,44 @@ for the navbar/footer includes, so it won't work by double-clicking the
 HTML file directly; it needs `http://` (Live Server or GitHub Pages both
 work fine).
 
-## Next: Firebase Authentication (Phase 16)
+## Bookmarks feature (Firestore)
 
-Once this version is running cleanly and pushed to GitHub, the next step
-is Firebase Auth:
-1. Create the Firebase project + register the web app.
-2. Add `firebase-config.js` and connect it.
-3. Google Sign-In, restricted to `@uap-bd.edu` addresses.
-4. Profile icon in the navbar (name, email, logout) — the `👤` link in
-   `components/navbar.html` is already there as the hook point.
-5. Gate `previous.html`, `questions.html` and `gallery.html` behind login.
+Signed-in students can bookmark a question section (⭐ button on
+`questions.html`) and see all their saved sections on `bookmarks.html`.
+This needs Firestore enabled once in the Firebase Console:
 
-We're holding off until the redesign is stable so the auth/profile UI
-gets built once against the final structure, not patched onto files that
-are about to be replaced.
+1. Firebase Console → **Build → Firestore Database** → **Create database**
+2. Choose a region close to Bangladesh (e.g. `asia-south1`), start in
+   **production mode**
+3. Go to the **Rules** tab and paste:
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /bookmarks/{userId} {
+         allow read, write: if request.auth != null && request.auth.uid == userId;
+       }
+     }
+   }
+   ```
+   This makes sure a student can only read/write their own bookmark
+   document — nobody can see or edit anyone else's bookmarks.
+4. **Publish** the rules.
+
+That's it — no code changes needed, `assets/js/bookmarks.js` already
+talks to Firestore using this structure.
+
+## Current status (as of this version)
+
+- ✅ Firebase Auth — Google Sign-In restricted to `@uap-bd.edu`, profile
+  chip with logout in the navbar, `previous.html` / `batch.html` /
+  `questions.html` / `gallery.html` / `bookmarks.html` gated behind sign-in
+- ✅ Bookmarks (Firestore) — see above
+- ⏳ Not done yet: real question/gallery images (still placeholders),
+  Firebase Storage-based file-level security, student upload/contribution
+  flow
+
+Note: the current protection is **UI-level** — a signed-out visitor can't
+see the pages, but the image files themselves are still plain static
+files in the repo. If you need the actual files private (not just hidden
+in the UI), that's the Firebase Storage step, still pending.

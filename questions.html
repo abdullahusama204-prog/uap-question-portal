@@ -32,6 +32,7 @@
     <span class="eyebrow">Question Papers</span>
     <h1 id="questionTitle">Questions</h1>
     <p id="questionSubtitle">Select a batch, exam and section from Previous Questions.</p>
+    <button class="bookmark-btn" id="bookmarkBtn">☆ Bookmark this section</button>
   </section>
 
   <nav class="section-nav" id="sectionNav"></nav>
@@ -65,9 +66,11 @@
   <!-- Firebase (Authentication) -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
   <script src="assets/js/firebase-config.js"></script>
   <script src="assets/js/toast.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/bookmarks.js"></script>
   <script>document.addEventListener("DOMContentLoaded", () => { if (window.UAPAuth) window.UAPAuth.requireAuth(); });</script>
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/search.js"></script>
