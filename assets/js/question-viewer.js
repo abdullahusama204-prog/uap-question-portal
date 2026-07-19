@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
-  const images = (batchId && examId && sectionId)
+  let images = (batchId && examId && sectionId)
     ? data.getQuestions(batchId, examId, sectionId)
     : [];
 
@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <img src="${img.src}" alt="${img.title}" loading="lazy" tabindex="0" role="button"
              aria-label="Open ${img.title}" data-index="${start + i}"
              onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}';this.style.objectFit='contain';this.style.padding='16px';">
+        ${img.caption ? `<span class="thumb-caption">${img.caption}</span>` : ""}
         ${img.date ? `<span class="thumb-date">${data.formatDate(img.date)}</span>` : ""}
       </div>
     `).join("");
@@ -114,7 +115,12 @@ document.addEventListener("DOMContentLoaded", () => {
     fullImage.src = img.src;
     fullImage.alt = img.title;
     fullImage.classList.remove("zoomed");
-    if (caption) caption.textContent = img.date ? `${img.title} · ${data.formatDate(img.date)}` : img.title;
+    if (caption) {
+      const parts = [img.title];
+      if (img.caption) parts.push(img.caption);
+      if (img.date) parts.push(data.formatDate(img.date));
+      caption.textContent = parts.join(" · ");
+    }
     if (downloadLink) {
       downloadLink.href = img.src;
       downloadLink.setAttribute("download", "");
@@ -191,4 +197,22 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   renderPage();
+
+  // Merge in admin-approved student submissions for this exact section, if any
+  (async function mergeApprovedSubmissions() {
+    if (!batchId || !examId || !sectionId || !window.UAPSubmissions) return;
+    try {
+      const approved = await window.UAPSubmissions.getApprovedByType("question");
+      const matching = approved.filter(item =>
+        item.batch === batchId && item.exam === examId && item.section === sectionId
+      );
+      if (!matching.length) return;
+      const extra = matching.map(item => ({ src: item.url, title: item.title || "Question", caption: item.caption || "", date: item.date }));
+      images = [...images, ...extra].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+      page = 0;
+      renderPage();
+    } catch (err) {
+      console.error("Merge approved questions error:", err);
+    }
+  })();
 });

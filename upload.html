@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#B8862F">
+  <title>Upload · UAP Question Archive</title>
+
+  <script>(function(){try{if(localStorage.getItem('uap-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/buttons.css">
+  <link rel="stylesheet" href="assets/css/viewer.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <div id="navbar-placeholder"></div>
+  <div class="auth-gate" id="authGate"></div>
+
+  <section class="page-hero">
+    <span class="eyebrow">Contribute</span>
+    <h1>📤 Upload a Question or Photo</h1>
+    <p>Submissions are reviewed by an admin before they appear on the site. You'll see the status below once you submit.</p>
+  </section>
+
+  <section class="upload-form-wrap">
+    <form id="uploadForm" class="upload-form">
+
+      <div class="form-toggle">
+        <label><input type="radio" name="uploadType" value="question" checked> 📄 Question Paper</label>
+        <label><input type="radio" name="uploadType" value="gallery"> 🖼 Gallery Photo</label>
+      </div>
+
+      <div id="questionFields" class="form-fields">
+        <label>Semester
+          <select id="fieldBatch" required></select>
+        </label>
+        <label>Exam
+          <select id="fieldExam" required></select>
+        </label>
+        <label>Section
+          <select id="fieldSection" required></select>
+        </label>
+      </div>
+      <p style="font-size:.8rem; color:var(--text-soft); margin:-8px 0 0;" id="questionHint">
+        These apply to every file you select below. Uploading pages for a different semester/exam/section? Submit them separately.
+      </p>
+
+      <label>Select image(s) — you can pick more than one at once
+        <input type="file" id="fieldFiles" accept="image/*" multiple>
+      </label>
+      <p style="font-size:.78rem; color:var(--text-soft); margin:-8px 0 0;">
+        📌 <strong>Supported formats:</strong> JPG, PNG, WEBP (recommended).
+        Avoid HEIC (common on iPhone — convert to JPG first) and PDF (not supported, take a screenshot/photo instead).
+        Max size: 10MB per file.
+      </p>
+
+      <div id="applyAllToolbar" class="apply-all-toolbar" style="display:none;">
+        <label>Course / Caption for all
+          <input type="text" id="applyAllCaption" placeholder="e.g. Data Structures">
+        </label>
+        <label>Date for all
+          <input type="date" id="applyAllDate">
+        </label>
+        <button type="button" class="apply-all-btn" id="applyAllBtn">Apply to all ⬇</button>
+      </div>
+
+      <div id="fileEditList" class="file-edit-list"></div>
+
+      <div class="upload-progress" id="uploadProgress" style="display:none;">
+        <div class="upload-progress-bar" id="uploadProgressBar"></div>
+      </div>
+      <p class="upload-progress-label" id="uploadProgressLabel" style="display:none;"></p>
+
+      <button type="submit" class="primary-btn" id="submitBtn">Submit for review</button>
+    </form>
+  </section>
+
+  <h2 class="section-title">My Submissions</h2>
+  <section class="upload-form-wrap" id="mySubmissionsList"></section>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="assets/js/archive-data.js"></script>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/toast.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", () => { if (window.UAPAuth) window.UAPAuth.requireAuth(); });</script>
+  <script src="assets/js/admin-config.js"></script>
+  <script src="assets/js/cloudinary-config.js"></script>
+  <script src="assets/js/submissions.js"></script>
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/search.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/footer.js"></script>
+  <script src="assets/js/upload-page.js"></script>
+</body>
+</html>

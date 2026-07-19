@@ -8,7 +8,13 @@ window.UAPAuth = (function () {
   let currentUser = null;
 
   function isAllowedEmail(email) {
-    return !!email && email.toLowerCase().endsWith("@" + ALLOWED_DOMAIN);
+    if (!email) return false;
+    const lower = email.toLowerCase();
+    if (lower.endsWith("@" + ALLOWED_DOMAIN)) return true;
+    // Admin emails (assets/js/admin-config.js) can sign in even if
+    // they're not a @uap-bd.edu address — e.g. the site owner's Gmail.
+    const admins = (window.UAP_ADMIN_EMAILS || []).map(e => e.toLowerCase());
+    return admins.includes(lower);
   }
 
   function notify(message, type) {
@@ -18,7 +24,6 @@ window.UAPAuth = (function () {
 
   function signIn() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ hd: ALLOWED_DOMAIN }); // hints Google to show UAP accounts first
     firebase.auth().signInWithPopup(provider)
       .then((result) => {
         const email = result.user ? result.user.email : "";

@@ -10,14 +10,14 @@
 window.UAP_DATA = {
 
   batches: [
-    { id: "11", label: "Batch 1.1" },
-    { id: "12", label: "Batch 1.2" },
-    { id: "21", label: "Batch 2.1" },
-    { id: "22", label: "Batch 2.2" },
-    { id: "31", label: "Batch 3.1" },
-    { id: "32", label: "Batch 3.2" },
-    { id: "41", label: "Batch 4.1" },
-    { id: "42", label: "Batch 4.2" }
+    { id: "11", label: "Semester 1.1" },
+    { id: "12", label: "Semester 1.2" },
+    { id: "21", label: "Semester 2.1" },
+    { id: "22", label: "Semester 2.2" },
+    { id: "31", label: "Semester 3.1" },
+    { id: "32", label: "Semester 3.2" },
+    { id: "41", label: "Semester 4.1" },
+    { id: "42", label: "Semester 4.2" }
   ],
 
   exams: [
@@ -33,16 +33,17 @@ window.UAP_DATA = {
     { id: "D", label: "Section D" }
   ],
 
-  // Question images, keyed as "batch-exam-section" -> array of {src, title, date}
+  // Question images, keyed as "batch-exam-section" -> array of {src, title, caption, date}
+  // `caption` is a good place for the course name (e.g. "Data Structures").
   // `date` format: "YYYY-MM-DD" (the exam date, or upload date — your choice).
   // Newest date shows first automatically.
   // Example key: "11-ct-A"
   questions: {
     "11-ct-A": [
-      { src: "assets/images/questions/11-ct-A-1.jpg", title: "CT1 - Question 1", date: "2026-02-05" }
+      { src: "assets/images/questions/11-ct-A-1.jpg", title: "CT1 - Question 1", caption: "Data Structures", date: "2026-02-05" }
     ]
     // Add more like:
-    // "11-ct-B": [ { src: "assets/images/questions/11-ct-B-1.jpg", title: "...", date: "2026-02-05" } ],
+    // "11-ct-B": [ { src: "assets/images/questions/11-ct-B-1.jpg", title: "...", caption: "Course name", date: "2026-02-05" } ],
   },
 
   // Gallery photos shown on gallery.html
@@ -50,9 +51,9 @@ window.UAP_DATA = {
   // together automatically; different dates get their own section
   // (newest date first).
   gallery: [
-    { src: "assets/images/gallery1.jpg", title: "Orientation Day 2026", caption: "Batch 1.1 · Welcome Session", date: "2026-01-10" },
-    { src: "assets/images/gallery2.jpg", title: "Orientation Day 2026", caption: "Batch 1.2 · Welcome Session", date: "2026-01-10" },
-    { src: "assets/images/gallery3.jpg", title: "Inter-Batch Cultural Festival", caption: "Music, food & performances", date: "2026-02-20" },
+    { src: "assets/images/gallery1.jpg", title: "Orientation Day 2026", caption: "Semester 1.1 · Welcome Session", date: "2026-01-10" },
+    { src: "assets/images/gallery2.jpg", title: "Orientation Day 2026", caption: "Semester 1.2 · Welcome Session", date: "2026-01-10" },
+    { src: "assets/images/gallery3.jpg", title: "Inter-Semester Cultural Festival", caption: "Music, food & performances", date: "2026-02-20" },
     { src: "assets/images/gallery4.jpg", title: "Convocation Ceremony", caption: "Class of 2026", date: "2026-03-15" }
   ]
 
@@ -74,10 +75,13 @@ window.UAP_DATA.formatDate = function (dateStr) {
 };
 
 // Helper: group gallery photos by date, newest date first.
+// Pass an array to group a custom list (e.g. static + approved submissions);
+// omit it to just group window.UAP_DATA.gallery.
 // Returns [{ date: "2026-03-02", label: "2 March 2026", photos: [...] }, ...]
-window.UAP_DATA.getGalleryGroups = function () {
+window.UAP_DATA.getGalleryGroups = function (photos) {
+  const source = photos || window.UAP_DATA.gallery || [];
   const groups = {};
-  (window.UAP_DATA.gallery || []).forEach((photo) => {
+  source.forEach((photo) => {
     const key = photo.date || "Undated";
     if (!groups[key]) groups[key] = [];
     groups[key].push(photo);

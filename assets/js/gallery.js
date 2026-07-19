@@ -1,5 +1,6 @@
 // ===============================
 // Gallery renderer (grouped by date) + lightbox with download
+// Merges static archive-data.js photos with admin-approved student submissions
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -7,22 +8,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const viewer = document.getElementById("viewer");
   if (!container || !viewer || !window.UAP_DATA) return;
 
-  const groups = window.UAP_DATA.getGalleryGroups();
-  // Flatten in the same order they're rendered, so next/prev works across date groups
-  const photos = groups.flatMap(g => g.photos);
+  const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23EEF0EC'/%3E%3Ccircle cx='200' cy='118' r='38' fill='%23D8DBD1'/%3E%3Crect x='130' y='172' width='140' height='14' rx='7' fill='%23D8DBD1'/%3E%3Crect x='155' y='195' width='90' height='10' rx='5' fill='%23D8DBD1'/%3E%3C/svg%3E";
+
+  let photos = [];
   let currentIndex = 0;
   let zoomed = false;
   let lastFocused = null;
 
-  const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23EEF0EC'/%3E%3Ccircle cx='200' cy='118' r='38' fill='%23D8DBD1'/%3E%3Crect x='130' y='172' width='140' height='14' rx='7' fill='%23D8DBD1'/%3E%3Crect x='155' y='195' width='90' height='10' rx='5' fill='%23D8DBD1'/%3E%3C/svg%3E";
+  function renderGallery(allPhotos) {
+    const groups = window.UAP_DATA.getGalleryGroups(allPhotos);
+    photos = groups.flatMap(g => g.photos);
 
-  if (!groups.length) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <span class="empty-icon">🖼️</span>
-        <p>No photos added yet. Check back soon!</p>
-      </div>`;
-  } else {
+    if (!groups.length) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <span class="empty-icon">🖼️</span>
+          <p>No photos added yet. Check back soon!</p>
+        </div>`;
+      return;
+    }
+
     let runningIndex = 0;
     container.innerHTML = groups.map(group => {
       const cards = group.photos.map(p => {
@@ -45,6 +50,23 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>`;
     }).join("");
   }
+
+  renderGallery(window.UAP_DATA.gallery);
+
+  // Merge in admin-approved student-submitted photos, if any
+  (async function mergeApprovedGallery() {
+    if (!window.UAPSubmissions) return;
+    try {
+      const approved = await window.UAPSubmissions.getApprovedByType("gallery");
+      if (!approved.length) return;
+      const extra = approved.map(item => ({
+        src: item.url, title: item.title || "Untitled", caption: item.caption || "", date: item.date
+      }));
+      renderGallery([...(window.UAP_DATA.gallery || []), ...extra]);
+    } catch (err) {
+      console.error("Merge approved gallery error:", err);
+    }
+  })();
 
   const fullImage = document.getElementById("fullImage");
   const caption = document.getElementById("viewerCaption");

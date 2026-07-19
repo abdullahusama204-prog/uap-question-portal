@@ -11,7 +11,7 @@ window.UAPSearch = (function () {
     data.batches.forEach(batch => {
       index.push({
         title: batch.label,
-        subtitle: "Batch overview",
+        subtitle: "Semester overview",
         url: `previous.html#${batch.id}`
       });
       data.exams.forEach(exam => {
@@ -32,6 +32,7 @@ window.UAPSearch = (function () {
 
     index.push({ title: "Photo Gallery", subtitle: "Campus photos", url: "gallery.html" });
     index.push({ title: "My Bookmarks", subtitle: "Saved question sections", url: "bookmarks.html" });
+    index.push({ title: "Upload", subtitle: "Submit a question or photo", url: "upload.html" });
     index.push({ title: "About", subtitle: "About this archive", url: "about.html" });
     index.push({ title: "Contact", subtitle: "Get in touch", url: "contact.html" });
 

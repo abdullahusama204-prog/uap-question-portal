@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
   <meta name="theme-color" content="#B8862F">
-  <title>Batch · UAP Question Archive</title>
+  <title>Semester · UAP Question Archive</title>
 
   <script>(function(){try{if(localStorage.getItem('uap-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
 
@@ -21,8 +21,8 @@
   <div class="auth-gate" id="authGate"></div>
 
   <section class="page-hero">
-    <span class="eyebrow">Batch</span>
-    <h1 id="batchTitle">Batch</h1>
+    <span class="eyebrow">Semester</span>
+    <h1 id="batchTitle">Semester</h1>
     <p>Pick an exam type to see its sections and question papers.</p>
   </section>
 
@@ -37,6 +37,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
   <script src="assets/js/firebase-config.js"></script>
   <script src="assets/js/toast.js"></script>
+  <script src="assets/js/admin-config.js"></script>
   <script src="assets/js/auth.js"></script>
   <script>document.addEventListener("DOMContentLoaded", () => { if (window.UAPAuth) window.UAPAuth.requireAuth(); });</script>
   <script>
@@ -46,7 +47,7 @@
       const data = window.UAP_DATA;
       const batch = data.batches.find(b => b.id === batchId);
 
-      document.getElementById("batchTitle").textContent = batch ? batch.label : "Batch not found";
+      document.getElementById("batchTitle").textContent = batch ? batch.label : "Semester not found";
 
       const examLinks = document.getElementById("examLinks");
       if (batch) {

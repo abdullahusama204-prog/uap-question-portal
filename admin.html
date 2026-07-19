@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
   <meta name="theme-color" content="#B8862F">
-  <title>Contact · UAP Question Archive</title>
+  <title>Admin · UAP Question Archive</title>
 
   <script>(function(){try{if(localStorage.getItem('uap-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
 
@@ -18,32 +18,47 @@
 <body>
 
   <div id="navbar-placeholder"></div>
+  <div class="auth-gate" id="authGate"></div>
 
-  <section class="simple-page">
-    <span class="eyebrow">Contact</span>
-    <h1>Get in touch</h1>
-    <p>Found a missing question paper, a bug, or want to contribute? Reach out — we usually reply within a day or two.</p>
-
-    <div class="contact-card">
-      <span>📧 threevondo@gmail.com</span>
-      <span>📍 University of Asia Pacific</span>
-    </div>
+  <section class="page-hero">
+    <span class="eyebrow">Admin</span>
+    <h1>🛡️ Review Submissions</h1>
+    <p>Approve or reject question papers and photos submitted by students.</p>
   </section>
+
+  <div id="adminGateMessage" class="simple-page" style="display:none; text-align:center;">
+    <p>তোমার account-এ admin access নেই। এই পেজ শুধু admin-দের জন্য।</p>
+  </div>
+
+  <section id="adminPanel" style="display:none;">
+    <div class="upload-form-wrap" id="pendingList" style="max-width: 760px;"></div>
+  </section>
+
+  <!-- Full Screen Viewer (click a thumbnail to inspect before approving) -->
+  <div class="viewer" id="viewer">
+    <button class="viewer-close" id="viewerClose">✕</button>
+    <img id="fullImage" alt="Submission preview">
+    <p class="viewer-caption" id="viewerCaption"></p>
+  </div>
 
   <div id="footer-placeholder"></div>
 
   <script src="assets/js/archive-data.js"></script>
 
-  <!-- Firebase (Authentication) -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
   <script src="assets/js/firebase-config.js"></script>
   <script src="assets/js/toast.js"></script>
-  <script src="assets/js/admin-config.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", () => { if (window.UAPAuth) window.UAPAuth.requireAuth(); });</script>
+  <script src="assets/js/admin-config.js"></script>
+  <script src="assets/js/submissions.js"></script>
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/search.js"></script>
   <script src="assets/js/navbar.js"></script>
   <script src="assets/js/footer.js"></script>
+  <script src="assets/js/admin-page.js"></script>
 </body>
 </html>
