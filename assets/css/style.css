@@ -727,6 +727,17 @@ html[data-theme="dark"] .catalog-tile .tab{ color: var(--accent-ink); background
 .reject-btn:hover{ border-color: var(--oxblood); color: var(--oxblood); }
 .approve-btn:disabled, .reject-btn:disabled{ opacity: .5; cursor: not-allowed; }
 
+.reject-reason-input{
+  font-family: var(--font-body);
+  font-size: .82rem;
+  padding: .5em .7em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  width: 160px;
+}
+
 .status-badge{
   font-family: var(--font-mono);
   font-size: .72rem;

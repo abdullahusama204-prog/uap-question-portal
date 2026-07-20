@@ -118,12 +118,14 @@ window.UAPSubmissions = (function () {
     }
   }
 
-  async function review(id, status) {
+  async function review(id, status, note) {
     const database = ensureDb();
-    await database.collection("submissions").doc(id).update({
+    const update = {
       status,
       reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    };
+    if (note) update.reviewNote = note;
+    await database.collection("submissions").doc(id).update(update);
   }
 
   return { isAdmin, submit, getMySubmissions, getPending, getApprovedByType, review };

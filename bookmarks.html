@@ -16,7 +16,8 @@
   <link rel="stylesheet" href="assets/css/responsive.css">
   <style>
     .remove-bookmark-btn{
-      margin-top: 10px;
+      margin-top: 0;
+      flex-shrink: 0;
       border: none;
       background: transparent;
       color: var(--oxblood);
@@ -40,7 +41,7 @@
     <p>Saved question sections for quick access, synced to your account.</p>
   </section>
 
-  <section class="batch-container" id="bookmarksContainer"></section>
+  <section class="upload-form-wrap" id="bookmarksContainer" style="max-width: 760px;"></section>
 
   <div id="footer-placeholder"></div>
 
@@ -91,11 +92,15 @@
       }
 
       container.innerHTML = items.map((item, i) => `
-        <div class="batch-card fade-in-item" style="--i:${i}">
-          <h2>⭐ ${item.label}</h2>
-          <p style="font-size:.78rem;">Saved ${relativeTime(item.savedAt)}</p>
+        <div class="submission-row fade-in-item" style="--i:${i}">
+          ${item.thumbnail
+            ? `<img src="${item.thumbnail}" alt="" class="submission-thumb">`
+            : `<span class="submission-thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🔖</span>`}
+          <div class="submission-meta">
+            <strong>⭐ ${item.label}</strong>
+            <span>Saved ${relativeTime(item.savedAt)}</span>
+          </div>
           <a href="${item.url}" class="open-btn">Open →</a>
-          <br>
           <button class="remove-bookmark-btn" data-id="${item.id}">Remove</button>
         </div>
       `).join("");

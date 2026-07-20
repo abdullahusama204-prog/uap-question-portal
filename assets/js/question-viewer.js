@@ -188,7 +188,8 @@ document.addEventListener("DOMContentLoaded", () => {
     bookmarkBtn.addEventListener("click", async () => {
       await window.UAPBookmarks.toggle(bookmarkId, {
         label: (batch && exam && section) ? `${batch.label} · ${exam.label} · ${section.label}` : bookmarkId,
-        url: `questions.html?batch=${batchId}&exam=${examId}&section=${sectionId}`
+        url: `questions.html?batch=${batchId}&exam=${examId}&section=${sectionId}`,
+        thumbnail: (images[0] && images[0].src) || null
       });
       updateBookmarkBtn();
     });

@@ -229,6 +229,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---- Click-to-enlarge viewer ----
+  const viewer = document.getElementById("viewer");
+  const fullImage = document.getElementById("fullImage");
+  const viewerCaption = document.getElementById("viewerCaption");
+  const viewerClose = document.getElementById("viewerClose");
+  let lastFocused = null;
+
+  function openViewer(url, caption) {
+    lastFocused = document.activeElement;
+    fullImage.src = url;
+    fullImage.classList.remove("zoomed");
+    if (viewerCaption) viewerCaption.textContent = caption || "";
+    viewer.classList.add("open");
+    if (viewerClose) viewerClose.focus();
+  }
+  function closeViewer() {
+    viewer.classList.remove("open");
+    if (lastFocused) lastFocused.focus();
+  }
+  if (viewerClose) viewerClose.addEventListener("click", closeViewer);
+  if (viewer) viewer.addEventListener("click", (e) => { if (e.target === viewer) closeViewer(); });
+  if (fullImage) fullImage.addEventListener("click", () => fullImage.classList.toggle("zoomed"));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && viewer.classList.contains("open")) closeViewer(); });
+
   async function loadMySubmissions() {
     const list = document.getElementById("mySubmissionsList");
     if (!list || !currentUser || !window.UAPSubmissions) return;
@@ -241,14 +265,25 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       list.innerHTML = items.map(item => `
         <div class="submission-row">
-          <img src="${item.url}" alt="${item.title || ''}" class="submission-thumb">
+          <img src="${item.url}" alt="${item.title || ''}" class="submission-thumb" tabindex="0" role="button" aria-label="Enlarge" style="cursor:zoom-in;" data-id="${item.id}">
           <div class="submission-meta">
             <strong>${item.title || (item.type === "gallery" ? "Gallery photo" : "Question")}</strong>
             <span>${item.type === "question" ? `Semester ${item.batch} · ${(item.exam || "").toUpperCase()} · Section ${item.section}${item.caption ? " · " + item.caption : ""}` : (item.caption || "")}</span>
+            ${item.status === "rejected" && item.reviewNote ? `<span style="color:var(--oxblood)">Reason: ${item.reviewNote}</span>` : ""}
           </div>
           <span class="status-badge status-${item.status}">${item.status}</span>
         </div>
       `).join("");
+
+      list.querySelectorAll(".submission-thumb").forEach(thumb => {
+        const openThis = () => {
+          const item = items.find(i => i.id === thumb.dataset.id);
+          if (!item) return;
+          openViewer(item.url, item.title || "");
+        };
+        thumb.addEventListener("click", openThis);
+        thumb.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openThis(); } });
+      });
     } catch (err) {
       console.error("Load submissions error:", err);
       list.innerHTML = `<p style="color:var(--oxblood)">Submissions লোড করতে সমস্যা হয়েছে।</p>`;

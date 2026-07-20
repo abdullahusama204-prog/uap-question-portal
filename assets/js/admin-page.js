@@ -98,16 +98,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
       pendingList.querySelectorAll(".reject-btn").forEach(btn => {
-        btn.addEventListener("click", async () => {
-          btn.disabled = true;
-          try {
-            await window.UAPSubmissions.review(btn.dataset.id, "rejected");
-            if (window.UAPToast) window.UAPToast.show("Rejected।", "info");
-          } catch (err) {
-            console.error(err);
-            if (window.UAPToast) window.UAPToast.show("সমস্যা হয়েছে, আবার চেষ্টা করো।", "error");
-          }
-          loadPending();
+        btn.addEventListener("click", () => {
+          const actionsDiv = btn.closest(".review-actions");
+          const id = btn.dataset.id;
+          actionsDiv.innerHTML = `
+            <input type="text" class="reject-reason-input" id="reason-${id}" placeholder="Reason (optional)">
+            <button class="reject-btn confirm-reject-btn" data-id="${id}">Confirm</button>
+            <button class="approve-btn cancel-reject-btn" data-id="${id}">Cancel</button>
+          `;
+          actionsDiv.querySelector(".cancel-reject-btn").addEventListener("click", () => loadPending());
+          actionsDiv.querySelector(".confirm-reject-btn").addEventListener("click", async (e) => {
+            const confirmBtn = e.currentTarget;
+            confirmBtn.disabled = true;
+            const reason = document.getElementById(`reason-${id}`).value.trim();
+            try {
+              await window.UAPSubmissions.review(id, "rejected", reason || null);
+              if (window.UAPToast) window.UAPToast.show("Rejected।", "info");
+            } catch (err) {
+              console.error(err);
+              if (window.UAPToast) window.UAPToast.show("সমস্যা হয়েছে, আবার চেষ্টা করো।", "error");
+            }
+            loadPending();
+          });
         });
       });
     } catch (err) {
