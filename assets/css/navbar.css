@@ -194,6 +194,24 @@
 }
 .theme-toggle:hover{ border-color: var(--accent); }
 
+.lang-toggle{
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  height: 34px;
+  padding: 0 .8em;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: .78rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  white-space: nowrap;
+}
+.lang-toggle:hover{ border-color: var(--accent); color: var(--accent); }
+
 .menu-toggle{
   display: none;
   cursor: pointer;

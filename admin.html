@@ -14,6 +14,59 @@
   <link rel="stylesheet" href="assets/css/buttons.css">
   <link rel="stylesheet" href="assets/css/viewer.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .admin-tabs{
+      max-width: 760px; margin: 0 auto 24px; padding: 0 24px;
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .admin-tab{
+      border: 1px solid var(--border); background: var(--surface); color: var(--text-soft);
+      font-family: var(--font-body); font-weight: 600; font-size: .85rem;
+      padding: .6em 1.1em; border-radius: 999px; cursor: pointer;
+    }
+    .admin-tab.active, .admin-tab:hover{ border-color: var(--accent); color: var(--accent); }
+
+    .course-block{
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      padding: 16px; margin-bottom: 14px; background: var(--bg);
+    }
+    .course-block-header{ display:flex; align-items:center; gap:10px; margin-bottom: 10px; }
+    .course-block-header input{
+      flex: 1; font-family: var(--font-body); font-weight: 600; font-size: .95rem;
+      padding: .5em .7em; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--surface); color: var(--text);
+    }
+    .batch-chip-list{ display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .batch-chip{
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+      padding: .35em .5em .35em .9em; font-family: var(--font-mono); font-size: .8rem;
+    }
+    .batch-chip button{ border:none; background:transparent; color:var(--oxblood); cursor:pointer; font-size:.8rem; }
+    .mini-add-row{ display:flex; gap:8px; }
+    .mini-add-row input{
+      flex:1; font-family: var(--font-body); font-size:.85rem; padding:.45em .7em;
+      border:1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text);
+    }
+    .mini-add-row button{
+      border:1px solid var(--border); background:var(--surface); color:var(--text);
+      font-weight:600; font-size:.82rem; padding:.45em 1em; border-radius:var(--radius-sm); cursor:pointer;
+    }
+    .mini-add-row button:hover{ border-color: var(--accent); color: var(--accent); }
+    .remove-course-btn{
+      border:none; background:transparent; color:var(--oxblood); font-size:.85rem; cursor:pointer; font-weight:600;
+    }
+
+    .folder-row{
+      display:flex; align-items:center; gap:14px;
+      border:1px solid var(--border); border-radius: var(--radius-md); padding:12px; margin-bottom:10px; background:var(--bg);
+    }
+    .folder-row img, .folder-row .folder-row-placeholder{
+      width:56px; height:56px; border-radius:var(--radius-sm); object-fit:cover; border:1px solid var(--border);
+      display:flex; align-items:center; justify-content:center; font-size:1.4rem; background:var(--surface); flex-shrink:0;
+    }
+    .folder-row-name{ flex:1; font-weight:600; }
+  </style>
 </head>
 <body>
 
@@ -21,17 +74,77 @@
   <div class="auth-gate" id="authGate"></div>
 
   <section class="page-hero">
-    <span class="eyebrow">Admin</span>
-    <h1>🛡️ Review Submissions</h1>
-    <p>Approve or reject question papers and photos submitted by students.</p>
+    <span class="eyebrow" data-i18n="admin_eyebrow">Admin</span>
+    <h1 data-i18n="admin_h1">🛡️ Review Submissions</h1>
+    <p data-i18n="admin_sub">Approve or reject question papers and photos submitted by students.</p>
   </section>
 
   <div id="adminGateMessage" class="simple-page" style="display:none; text-align:center;">
-    <p>তোমার account-এ admin access নেই। এই পেজ শুধু admin-দের জন্য।</p>
+    <p data-i18n="admin_no_access">Your account doesn't have admin access. This page is for admins only.</p>
   </div>
 
   <section id="adminPanel" style="display:none;">
-    <div class="upload-form-wrap" id="pendingList" style="max-width: 760px;"></div>
+
+    <div class="hero-stats" id="adminStats" style="max-width:760px; margin:0 auto 20px; padding:0 24px;"></div>
+
+    <div class="admin-tabs" id="adminTabs">
+      <button class="admin-tab active" data-tab="pending">📥 Pending</button>
+      <button class="admin-tab" data-tab="structure">🗂️ Question Structure</button>
+      <button class="admin-tab" data-tab="folders">📁 Gallery Folders</button>
+      <button class="admin-tab" data-tab="published">✅ Published Content</button>
+    </div>
+
+    <div class="admin-tab-panel" id="tab-pending">
+      <div class="upload-form-wrap" id="pendingList" style="max-width: 760px;"></div>
+    </div>
+
+    <div class="admin-tab-panel" id="tab-structure" style="display:none;">
+      <div class="upload-form-wrap" style="max-width: 760px;">
+        <p style="font-size:.85rem; color:var(--text-soft); margin-bottom:16px;">
+          Pick a Semester, then Load to add/remove the Courses and Batches students
+          will see for that semester — shared automatically across CT (all sections), Mid, and Final.
+        </p>
+        <div class="form-fields" style="margin-bottom:16px; grid-template-columns: 1fr;">
+          <label>Semester <select id="structBatch"></select></label>
+        </div>
+        <button class="secondary-btn" id="structLoadBtn">Load</button>
+
+        <div id="courseEditor" style="margin-top:20px;"></div>
+
+        <div class="mini-add-row" style="margin-top:14px;">
+          <input type="text" id="newCourseName" placeholder="New course name, e.g. Data Structures">
+          <button type="button" id="addCourseBtn">+ Add Course</button>
+        </div>
+
+        <button class="primary-btn" id="structSaveBtn" style="margin-top:18px; display:none;">💾 Save Changes</button>
+      </div>
+    </div>
+
+    <div class="admin-tab-panel" id="tab-folders" style="display:none;">
+      <div class="upload-form-wrap" style="max-width: 760px;">
+        <div class="upload-form" style="margin-bottom:24px;">
+          <label>Folder name
+            <input type="text" id="newFolderName" placeholder="e.g. Freshers Day 2026">
+          </label>
+          <label>Cover image (optional)
+            <input type="file" id="newFolderCover" accept="image/*">
+          </label>
+          <div class="upload-progress" id="folderUploadProgress" style="display:none;">
+            <div class="upload-progress-bar" id="folderUploadProgressBar"></div>
+          </div>
+          <button type="button" class="primary-btn" id="addFolderBtn">+ Add Folder</button>
+        </div>
+        <div id="folderList"></div>
+      </div>
+    </div>
+
+    <div class="admin-tab-panel" id="tab-published" style="display:none;">
+      <div class="upload-form-wrap" style="max-width: 760px;">
+        <input type="text" id="publishedSearch" placeholder="🔍 Search by title, course, or folder…" style="width:100%; margin-bottom:16px; font-family:var(--font-body); font-size:.88rem; padding:.7em 1em; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); color:var(--text);">
+        <div id="publishedList"></div>
+      </div>
+    </div>
+
   </section>
 
   <!-- Full Screen Viewer (click a thumbnail to inspect before approving) -->
@@ -44,6 +157,7 @@
   <div id="footer-placeholder"></div>
 
   <script src="assets/js/archive-data.js"></script>
+  <script src="assets/js/i18n.js"></script>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -54,11 +168,14 @@
   <script src="assets/js/auth.js"></script>
   <script>document.addEventListener("DOMContentLoaded", () => { if (window.UAPAuth) window.UAPAuth.requireAuth(); });</script>
   <script src="assets/js/admin-config.js"></script>
+  <script src="assets/js/cloudinary-config.js"></script>
   <script src="assets/js/submissions.js"></script>
+  <script src="assets/js/taxonomy.js"></script>
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/search.js"></script>
   <script src="assets/js/navbar.js"></script>
   <script src="assets/js/footer.js"></script>
   <script src="assets/js/admin-page.js"></script>
+  <script src="assets/js/admin-taxonomy.js"></script>
 </body>
 </html>

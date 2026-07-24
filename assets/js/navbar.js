@@ -65,6 +65,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Theme toggle (defined in theme.js)
   if (window.UAPTheme) window.UAPTheme.bind();
 
+  // Language toggle (defined in i18n.js)
+  if (window.UAPI18N) window.UAPI18N.bind();
+
   // Smart search (defined in search.js)
   if (window.UAPSearch) window.UAPSearch.init();
 

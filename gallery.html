@@ -14,6 +14,52 @@
   <link rel="stylesheet" href="assets/css/buttons.css">
   <link rel="stylesheet" href="assets/css/viewer.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .breadcrumb-nav{ max-width:var(--container); margin:0 auto; padding:0 24px 12px; }
+    .breadcrumb-nav a{ font-family: var(--font-mono); font-size:.85rem; font-weight:600; color:var(--accent); }
+    .breadcrumb-nav a:hover{ text-decoration: underline; }
+
+    .folder-grid{
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 16px 24px 96px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+    }
+    .folder-card{
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .folder-card:hover{ transform: translateY(-3px); border-color: var(--accent); }
+    .folder-cover{
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      background: var(--bg);
+    }
+    .folder-cover-placeholder{
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+    }
+    .folder-name{
+      padding: 14px 16px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+  </style>
 </head>
 <body>
 
@@ -21,12 +67,15 @@
   <div class="auth-gate" id="authGate"></div>
 
   <section class="page-hero">
-    <span class="eyebrow">Campus Life</span>
-    <h1>📸 UAP Photo Gallery</h1>
-    <p>Explore memorable moments from different batches, events and university activities.</p>
+    <span class="eyebrow" data-i18n="gallery_eyebrow">Campus Life</span>
+    <h1 data-i18n="gallery_h1">📸 UAP Photo Gallery</h1>
+    <p id="gallerySub" data-i18n="gallery_sub">Explore memorable moments from different semesters, events and university activities.</p>
   </section>
 
-  <div class="gallery-container" id="galleryContainer"></div>
+  <div class="breadcrumb-nav" id="breadcrumb" style="display:none;"></div>
+
+  <div class="folder-grid" id="folderGrid" style="display:none;"></div>
+  <div class="gallery-container" id="galleryContainer" style="display:none;"></div>
 
   <!-- Full Screen Viewer -->
   <div class="viewer" id="viewer">
@@ -36,7 +85,7 @@
     <button class="viewer-nav viewer-next" id="viewerNext">›</button>
     <div class="viewer-toolbar">
       <a id="downloadLink" href="#" download>
-        <button class="download-btn">⬇ Download</button>
+        <button class="download-btn" data-i18n="download_btn">⬇ Download</button>
       </a>
     </div>
     <p class="viewer-caption" id="viewerCaption"></p>
@@ -45,17 +94,18 @@
   <div id="footer-placeholder"></div>
 
   <script src="assets/js/archive-data.js"></script>
+  <script src="assets/js/i18n.js"></script>
 
-  <!-- Firebase (Authentication) -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
   <script src="assets/js/firebase-config.js"></script>
   <script src="assets/js/toast.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", () => { if (window.UAPAuth) window.UAPAuth.requireAuth(); });</script>
   <script src="assets/js/admin-config.js"></script>
   <script src="assets/js/submissions.js"></script>
-  <script>document.addEventListener("DOMContentLoaded", () => { if (window.UAPAuth) window.UAPAuth.requireAuth(); });</script>
+  <script src="assets/js/taxonomy.js"></script>
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/search.js"></script>
   <script src="assets/js/navbar.js"></script>

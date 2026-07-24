@@ -21,9 +21,9 @@
   <div class="auth-gate" id="authGate"></div>
 
   <section class="page-hero">
-    <span class="eyebrow">Archive</span>
-    <h1>Previous Questions</h1>
-    <p>Browse all previous exam questions organized by semester. Select a semester below to access CT, Mid and Final questions.</p>
+    <span class="eyebrow" data-i18n="previous_eyebrow">Archive</span>
+    <h1 data-i18n="previous_h1">Previous Questions</h1>
+    <p data-i18n="previous_sub">Browse all previous exam questions organized by semester. Select a semester below to access CT, Mid and Final questions.</p>
 
     <div class="hero-stats" id="statsRow"></div>
   </section>
@@ -33,6 +33,7 @@
   <div id="footer-placeholder"></div>
 
   <script src="assets/js/archive-data.js"></script>
+  <script src="assets/js/i18n.js"></script>
 
   <!-- Firebase (Authentication) -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -48,21 +49,23 @@
       const container = document.getElementById("batchContainer");
       const stats = document.getElementById("statsRow");
 
+      const T = window.UAPI18N ? window.UAPI18N.t : (k) => k;
+
       container.innerHTML = data.batches.map((b, i) => `
         <div class="batch-card fade-in-item" style="--i:${i}" id="${b.id}">
           <h2>🎓 ${b.label}</h2>
           <p>✅ CT Questions</p>
           <p>✅ Mid Questions</p>
           <p>✅ Final Questions</p>
-          <a href="batch.html?batch=${b.id}" class="open-btn">Open →</a>
+          <a href="batch.html?batch=${b.id}" class="open-btn" data-i18n="home_open">${T("home_open")}</a>
         </div>
       `).join("");
 
       stats.innerHTML = `
-        <div class="stat-card"><h3>${data.batches.length}</h3><span>Semesters</span></div>
-        <div class="stat-card"><h3>CT</h3><span>Available</span></div>
-        <div class="stat-card"><h3>Mid</h3><span>Available</span></div>
-        <div class="stat-card"><h3>Final</h3><span>Available</span></div>
+        <div class="stat-card"><h3>${data.batches.length}</h3><span data-i18n="stat_semesters">${T("stat_semesters")}</span></div>
+        <div class="stat-card"><h3>CT</h3><span data-i18n="stat_available">${T("stat_available")}</span></div>
+        <div class="stat-card"><h3>Mid</h3><span data-i18n="stat_available">${T("stat_available")}</span></div>
+        <div class="stat-card"><h3>Final</h3><span data-i18n="stat_available">${T("stat_available")}</span></div>
       `;
     });
   </script>

@@ -21,51 +21,71 @@
   <div class="auth-gate" id="authGate"></div>
 
   <section class="page-hero">
-    <span class="eyebrow">Contribute</span>
-    <h1>📤 Upload a Question or Photo</h1>
-    <p>Submissions are reviewed by an admin before they appear on the site. You'll see the status below once you submit.</p>
+    <span class="eyebrow" data-i18n="upload_eyebrow">Contribute</span>
+    <h1 data-i18n="upload_h1">📤 Upload a Question or Photo</h1>
+    <p data-i18n="upload_sub">Submissions are reviewed by an admin before they appear on the site. You'll see the status below once you submit.</p>
   </section>
 
   <section class="upload-form-wrap">
-    <form id="uploadForm" class="upload-form">
+    <form id="uploadForm" class="upload-form" novalidate>
 
       <div class="form-toggle">
-        <label><input type="radio" name="uploadType" value="question" checked> 📄 Question Paper</label>
-        <label><input type="radio" name="uploadType" value="gallery"> 🖼 Gallery Photo</label>
+        <label><input type="radio" name="uploadType" value="question" checked> <span data-i18n="upload_type_question">📄 Question Paper</span></label>
+        <label><input type="radio" name="uploadType" value="gallery"> <span data-i18n="upload_type_gallery">🖼 Gallery Photo</span></label>
       </div>
 
       <div id="questionFields" class="form-fields">
-        <label>Semester
+        <label data-i18n-wrap="upload_label_semester">Semester
           <select id="fieldBatch" required></select>
         </label>
-        <label>Exam
+        <label data-i18n-wrap="upload_label_exam">Exam
           <select id="fieldExam" required></select>
         </label>
-        <label>Section
+        <label id="sectionFieldWrap" data-i18n-wrap="upload_label_section">Section
           <select id="fieldSection" required></select>
         </label>
+        <label data-i18n-wrap="upload_label_course">Course
+          <select id="fieldCourse" required>
+            <option value="">— choose semester/exam first —</option>
+          </select>
+        </label>
+        <label style="grid-column: 1 / -1;" data-i18n-wrap="upload_label_intake">Batch
+          <select id="fieldIntake" required>
+            <option value="">— choose a course first —</option>
+          </select>
+        </label>
       </div>
-      <p style="font-size:.8rem; color:var(--text-soft); margin:-8px 0 0;" id="questionHint">
-        These apply to every file you select below. Uploading pages for a different semester/exam/section? Submit them separately.
+      <p style="font-size:.8rem; color:var(--text-soft); margin:-8px 0 0;" id="questionHint" data-i18n="upload_hint">
+        These apply to every file you select below. Uploading pages for a different semester/exam/section/course/batch? Submit them separately.
       </p>
+      <p id="noCourseNotice" class="upload-notice" style="display:none;"></p>
 
-      <label>Select image(s) — you can pick more than one at once
+      <div id="galleryFields" class="form-fields" style="display:none;">
+        <label style="grid-column: 1 / -1;" data-i18n-wrap="upload_label_folder">Folder
+          <select id="fieldFolder" required>
+            <option value="">— loading folders —</option>
+          </select>
+        </label>
+      </div>
+      <p id="noFolderNotice" class="upload-notice" style="display:none;"></p>
+
+      <label data-i18n-wrap="upload_label_files">Select image(s) — you can pick more than one at once
         <input type="file" id="fieldFiles" accept="image/*" multiple>
       </label>
-      <p style="font-size:.78rem; color:var(--text-soft); margin:-8px 0 0;">
+      <p style="font-size:.78rem; color:var(--text-soft); margin:-8px 0 0;" data-i18n="upload_format_notice">
         📌 <strong>Supported formats:</strong> JPG, PNG, WEBP (recommended).
         Avoid HEIC (common on iPhone — convert to JPG first) and PDF (not supported, take a screenshot/photo instead).
         Max size: 10MB per file.
       </p>
 
       <div id="applyAllToolbar" class="apply-all-toolbar" style="display:none;">
-        <label>Course / Caption for all
+        <label data-i18n-wrap="upload_apply_caption" id="applyAllCaptionLabel">Course / Caption for all
           <input type="text" id="applyAllCaption" placeholder="e.g. Data Structures">
         </label>
-        <label>Date for all
+        <label data-i18n-wrap="upload_apply_date">Date for all
           <input type="date" id="applyAllDate">
         </label>
-        <button type="button" class="apply-all-btn" id="applyAllBtn">Apply to all ⬇</button>
+        <button type="button" class="apply-all-btn" id="applyAllBtn" data-i18n="upload_apply_btn">Apply to all ⬇</button>
       </div>
 
       <div id="fileEditList" class="file-edit-list"></div>
@@ -75,11 +95,11 @@
       </div>
       <p class="upload-progress-label" id="uploadProgressLabel" style="display:none;"></p>
 
-      <button type="submit" class="primary-btn" id="submitBtn">Submit for review</button>
+      <button type="submit" class="primary-btn" id="submitBtn" data-i18n="upload_submit">Submit for review</button>
     </form>
   </section>
 
-  <h2 class="section-title">My Submissions</h2>
+  <h2 class="section-title" data-i18n="upload_my_submissions">My Submissions</h2>
   <section class="upload-form-wrap" id="mySubmissionsList"></section>
 
   <!-- Full Screen Viewer (click a submission thumbnail to inspect it) -->
@@ -92,6 +112,7 @@
   <div id="footer-placeholder"></div>
 
   <script src="assets/js/archive-data.js"></script>
+  <script src="assets/js/i18n.js"></script>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -104,6 +125,7 @@
   <script src="assets/js/admin-config.js"></script>
   <script src="assets/js/cloudinary-config.js"></script>
   <script src="assets/js/submissions.js"></script>
+  <script src="assets/js/taxonomy.js"></script>
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/search.js"></script>
   <script src="assets/js/navbar.js"></script>

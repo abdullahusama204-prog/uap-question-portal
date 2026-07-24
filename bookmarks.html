@@ -36,9 +36,9 @@
   <div class="auth-gate" id="authGate"></div>
 
   <section class="page-hero">
-    <span class="eyebrow">Your Library</span>
-    <h1>🔖 My Bookmarks</h1>
-    <p>Saved question sections for quick access, synced to your account.</p>
+    <span class="eyebrow" data-i18n="bookmarks_eyebrow">Your Library</span>
+    <h1 data-i18n="bookmarks_h1">🔖 My Bookmarks</h1>
+    <p data-i18n="bookmarks_sub">Saved question sections for quick access, synced to your account.</p>
   </section>
 
   <section class="upload-form-wrap" id="bookmarksContainer" style="max-width: 760px;"></section>
@@ -46,6 +46,7 @@
   <div id="footer-placeholder"></div>
 
   <script src="assets/js/archive-data.js"></script>
+  <script src="assets/js/i18n.js"></script>
 
   <!-- Firebase (Authentication + Bookmarks) -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
@@ -77,6 +78,7 @@
     }
 
     function renderBookmarks() {
+      const T = window.UAPI18N ? window.UAPI18N.t : (k) => k;
       const container = document.getElementById("bookmarksContainer");
       if (!container || !window.UAPBookmarks) return;
       const items = window.UAPBookmarks.getAll();
@@ -85,8 +87,8 @@
         container.innerHTML = `
           <div class="empty-state">
             <span class="empty-icon">🔖</span>
-            <p>এখনো কিছু bookmark করোনি।</p>
-            <a href="previous.html" class="secondary-btn" style="margin-top:.8em;">📚 Previous Questions দেখো</a>
+            <p>${T("bookmarks_empty")}</p>
+            <a href="previous.html" class="secondary-btn" style="margin-top:.8em;">${T("bookmarks_cta")}</a>
           </div>`;
         return;
       }
@@ -98,10 +100,10 @@
             : `<span class="submission-thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🔖</span>`}
           <div class="submission-meta">
             <strong>⭐ ${item.label}</strong>
-            <span>Saved ${relativeTime(item.savedAt)}</span>
+            <span>${T("bookmarks_saved_prefix")} ${relativeTime(item.savedAt)}</span>
           </div>
-          <a href="${item.url}" class="open-btn">Open →</a>
-          <button class="remove-bookmark-btn" data-id="${item.id}">Remove</button>
+          <a href="${item.url}" class="open-btn">${T("home_open")}</a>
+          <button class="remove-bookmark-btn" data-id="${item.id}">${T("bookmarks_remove")}</button>
         </div>
       `).join("");
 

@@ -21,6 +21,33 @@
       padding:.5em 1em; border-radius:999px; border:1px solid var(--border); color:var(--text-soft);
     }
     .section-nav a.active, .section-nav a:hover{ border-color:var(--accent); color:var(--accent); }
+
+    .breadcrumb-nav{ max-width:var(--container); margin:0 auto; padding:0 24px 12px; }
+    .breadcrumb-nav a{ font-family: var(--font-mono); font-size:.85rem; font-weight:600; color:var(--accent); }
+    .breadcrumb-nav a:hover{ text-decoration: underline; }
+
+    .taxonomy-browser{
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 16px 24px 96px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .taxonomy-card{
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      padding: 24px 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s ease, transform .15s ease;
+    }
+    .taxonomy-card:hover{ border-color: var(--accent); transform: translateY(-3px); }
+    .taxonomy-card .icon{ font-size: 1.9rem; display: block; margin-bottom: .35em; }
+    .taxonomy-card .name{ font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; color: var(--text); }
   </style>
 </head>
 <body>
@@ -29,20 +56,25 @@
   <div class="auth-gate" id="authGate"></div>
 
   <section class="page-hero">
-    <span class="eyebrow">Question Papers</span>
+    <span class="eyebrow" data-i18n="questions_eyebrow">Question Papers</span>
     <h1 id="questionTitle">Questions</h1>
-    <p id="questionSubtitle">Select a semester, exam and section from Previous Questions.</p>
-    <button class="bookmark-btn" id="bookmarkBtn">☆ Bookmark this section</button>
+    <p id="questionSubtitle" data-i18n="questions_default_sub">Select a semester, exam and section from Previous Questions.</p>
+    <button class="bookmark-btn" id="bookmarkBtn" data-i18n="bookmark_default" style="display:none;">☆ Bookmark this section</button>
   </section>
 
   <nav class="section-nav" id="sectionNav"></nav>
+  <div class="breadcrumb-nav" id="breadcrumb" style="display:none;"></div>
 
-  <div class="question-gallery" id="questionGrid"></div>
+  <div id="courseBrowser" class="taxonomy-browser" style="display:none;"></div>
+  <div id="batchBrowser" class="taxonomy-browser" style="display:none;"></div>
 
-  <div class="pagination">
-    <button id="prevPage">⬅ Previous</button>
-    <span class="page-indicator" id="pageIndicator"></span>
-    <button id="nextPage">Next ➡</button>
+  <div id="questionsStage" style="display:none;">
+    <div class="question-gallery" id="questionGrid"></div>
+    <div class="pagination">
+      <button id="prevPage" data-i18n="pagination_prev">⬅ Previous</button>
+      <span class="page-indicator" id="pageIndicator"></span>
+      <button id="nextPage" data-i18n="pagination_next">Next ➡</button>
+    </div>
   </div>
 
   <!-- Full Screen Viewer -->
@@ -53,7 +85,7 @@
     <button class="viewer-nav viewer-next" id="viewerNext">›</button>
     <div class="viewer-toolbar">
       <a id="downloadLink" href="#" download>
-        <button class="download-btn">⬇ Download</button>
+        <button class="download-btn" data-i18n="download_btn">⬇ Download</button>
       </a>
     </div>
     <p class="viewer-caption" id="viewerCaption"></p>
@@ -62,18 +94,20 @@
   <div id="footer-placeholder"></div>
 
   <script src="assets/js/archive-data.js"></script>
+  <script src="assets/js/i18n.js"></script>
 
-  <!-- Firebase (Authentication) -->
+  <!-- Firebase (Authentication + Firestore for bookmarks/taxonomy/submissions) -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
   <script src="assets/js/firebase-config.js"></script>
   <script src="assets/js/toast.js"></script>
   <script src="assets/js/auth.js"></script>
-  <script src="assets/js/bookmarks.js"></script>
-  <script src="assets/js/admin-config.js"></script>
-  <script src="assets/js/submissions.js"></script>
   <script>document.addEventListener("DOMContentLoaded", () => { if (window.UAPAuth) window.UAPAuth.requireAuth(); });</script>
+  <script src="assets/js/admin-config.js"></script>
+  <script src="assets/js/bookmarks.js"></script>
+  <script src="assets/js/submissions.js"></script>
+  <script src="assets/js/taxonomy.js"></script>
   <script src="assets/js/theme.js"></script>
   <script src="assets/js/search.js"></script>
   <script src="assets/js/navbar.js"></script>

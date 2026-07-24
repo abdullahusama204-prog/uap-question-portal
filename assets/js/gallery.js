@@ -1,14 +1,60 @@
 // ===============================
-// Gallery renderer (grouped by date) + lightbox with download
-// Merges static archive-data.js photos with admin-approved student submissions
+// Gallery — folder browser + date-grouped lightbox with download
+// Folders are matched by NAME across: admin-created folders (Firestore),
+// static archive-data.js entries (`folder` field), and approved student
+// submissions (`folderName` field). Photos with no matching folder name
+// fall into the built-in "General" folder.
 // ===============================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
-  const container = document.getElementById("galleryContainer");
+  const T = window.UAPI18N ? window.UAPI18N.t : (k) => k;
+  const params = new URLSearchParams(location.search);
+  const folderParam = params.get("folder");
+
+  const folderGrid = document.getElementById("folderGrid");
+  const galleryContainer = document.getElementById("galleryContainer");
+  const breadcrumb = document.getElementById("breadcrumb");
+  const gallerySub = document.getElementById("gallerySub");
   const viewer = document.getElementById("viewer");
-  if (!container || !viewer || !window.UAP_DATA) return;
+  if (!folderGrid || !galleryContainer || !viewer || !window.UAP_DATA) return;
 
   const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23EEF0EC'/%3E%3Ccircle cx='200' cy='118' r='38' fill='%23D8DBD1'/%3E%3Crect x='130' y='172' width='140' height='14' rx='7' fill='%23D8DBD1'/%3E%3Crect x='155' y='195' width='90' height='10' rx='5' fill='%23D8DBD1'/%3E%3C/svg%3E";
+
+  // ---- STAGE 1: folder browser ----
+  if (!folderParam) {
+    folderGrid.style.display = "grid";
+    galleryContainer.style.display = "none";
+    breadcrumb.style.display = "none";
+
+    const adminFolders = window.UAPTaxonomy ? await window.UAPTaxonomy.getFolders() : [];
+    const allFolders = [...adminFolders];
+    if (!allFolders.some(f => f.name === "General")) {
+      allFolders.push({ id: "__general__", name: "General", coverImageUrl: null });
+    }
+
+    folderGrid.innerHTML = allFolders.map((f, i) => `
+      <a class="folder-card fade-in-item" style="--i:${i}" href="gallery.html?folder=${encodeURIComponent(f.name)}">
+        ${f.coverImageUrl
+          ? `<img src="${f.coverImageUrl}" class="folder-cover" alt="" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}';">`
+          : `<div class="folder-cover-placeholder">📁</div>`}
+        <div class="folder-name">${f.name}</div>
+      </a>
+    `).join("");
+    return;
+  }
+
+  // ---- STAGE 2: photos within the chosen folder ----
+  const folderName = decodeURIComponent(folderParam);
+  folderGrid.style.display = "none";
+  galleryContainer.style.display = "block";
+  breadcrumb.style.display = "block";
+  breadcrumb.innerHTML = `<a href="gallery.html">← ${T("back_to_folders") || "Back to folders"}</a>`;
+  if (gallerySub) gallerySub.textContent = folderName;
+
+  function matchesFolder(photo) {
+    if (folderName === "General") return !photo.folder || photo.folder === "General";
+    return photo.folder === folderName;
+  }
 
   let photos = [];
   let currentIndex = 0;
@@ -16,20 +62,21 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastFocused = null;
 
   function renderGallery(allPhotos) {
-    const groups = window.UAP_DATA.getGalleryGroups(allPhotos);
+    const filtered = allPhotos.filter(matchesFolder);
+    const groups = window.UAP_DATA.getGalleryGroups(filtered);
     photos = groups.flatMap(g => g.photos);
 
     if (!groups.length) {
-      container.innerHTML = `
+      galleryContainer.innerHTML = `
         <div class="empty-state">
           <span class="empty-icon">🖼️</span>
-          <p>No photos added yet. Check back soon!</p>
+          <p>No photos in this folder yet. Check back soon!</p>
         </div>`;
       return;
     }
 
     let runningIndex = 0;
-    container.innerHTML = groups.map(group => {
+    galleryContainer.innerHTML = groups.map(group => {
       const cards = group.photos.map(p => {
         const card = `
           <div class="gallery-card fade-in-item" style="--i:${runningIndex % 12}" data-index="${runningIndex}" tabindex="0" role="button" aria-label="Open ${p.title}">
@@ -51,16 +98,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }).join("");
   }
 
-  renderGallery(window.UAP_DATA.gallery);
+  renderGallery(window.UAP_DATA.gallery || []);
 
-  // Merge in admin-approved student-submitted photos, if any
+  // Merge in admin-approved student-submitted photos for this folder
   (async function mergeApprovedGallery() {
     if (!window.UAPSubmissions) return;
     try {
       const approved = await window.UAPSubmissions.getApprovedByType("gallery");
-      if (!approved.length) return;
-      const extra = approved.map(item => ({
-        src: item.url, title: item.title || "Untitled", caption: item.caption || "", date: item.date
+      const matching = approved.filter(item => {
+        const itemFolder = item.folderName || "General";
+        return folderName === "General" ? (itemFolder === "General") : (itemFolder === folderName);
+      });
+      if (!matching.length) return;
+      const extra = matching.map(item => ({
+        src: item.url, title: item.title || "Untitled", caption: item.caption || "", date: item.date, folder: item.folderName || "General"
       }));
       renderGallery([...(window.UAP_DATA.gallery || []), ...extra]);
     } catch (err) {
@@ -85,36 +136,25 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateImage() {
     const photo = photos[currentIndex];
     if (!photo) return;
-    fullImage.onerror = () => {
-      fullImage.onerror = null;
-      fullImage.src = PLACEHOLDER_IMG;
-      fullImage.style.background = "#fff";
-    };
+    fullImage.onerror = () => { fullImage.onerror = null; fullImage.src = PLACEHOLDER_IMG; fullImage.style.background = "#fff"; };
     fullImage.style.background = "";
     fullImage.src = photo.src;
     fullImage.alt = photo.title;
     fullImage.classList.remove("zoomed");
     if (caption) caption.textContent = `${photo.title}${photo.caption ? " · " + photo.caption : ""}`;
-    if (downloadLink) {
-      downloadLink.href = photo.src;
-      downloadLink.setAttribute("download", "");
-    }
+    if (downloadLink) { downloadLink.href = photo.src; downloadLink.setAttribute("download", ""); }
   }
 
-  function closeViewer() {
-    viewer.classList.remove("open");
-    if (lastFocused) lastFocused.focus();
-  }
+  function closeViewer() { viewer.classList.remove("open"); if (lastFocused) lastFocused.focus(); }
   function showNext() { currentIndex = (currentIndex + 1) % photos.length; updateImage(); }
   function showPrev() { currentIndex = (currentIndex - 1 + photos.length) % photos.length; updateImage(); }
 
-  container.addEventListener("click", (e) => {
+  galleryContainer.addEventListener("click", (e) => {
     const card = e.target.closest(".gallery-card");
     if (!card) return;
     openViewer(Number(card.dataset.index));
   });
-
-  container.addEventListener("keydown", (e) => {
+  galleryContainer.addEventListener("keydown", (e) => {
     if (e.key !== "Enter" && e.key !== " ") return;
     const card = e.target.closest(".gallery-card");
     if (!card) return;
@@ -128,15 +168,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (nextBtn) nextBtn.addEventListener("click", showNext);
   if (prevBtn) prevBtn.addEventListener("click", showPrev);
 
-  fullImage.addEventListener("click", () => {
-    zoomed = !zoomed;
-    fullImage.classList.toggle("zoomed", zoomed);
-  });
-
-  viewer.addEventListener("click", (e) => {
-    if (e.target === viewer) closeViewer();
-  });
-
+  fullImage.addEventListener("click", () => { zoomed = !zoomed; fullImage.classList.toggle("zoomed", zoomed); });
+  viewer.addEventListener("click", (e) => { if (e.target === viewer) closeViewer(); });
   document.addEventListener("keydown", (e) => {
     if (!viewer.classList.contains("open")) return;
     if (e.key === "Escape") closeViewer();

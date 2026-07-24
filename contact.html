@@ -14,25 +14,102 @@
   <link rel="stylesheet" href="assets/css/buttons.css">
   <link rel="stylesheet" href="assets/css/viewer.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .team-list{
+      margin-top: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px 24px;
+    }
+    .team-heading{
+      font-family: var(--font-mono);
+      font-size: .78rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      margin: 16px 0 4px;
+    }
+    .team-member{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .team-member:last-child{ border-bottom: none; }
+    .team-avatar{
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--brass-soft);
+      color: var(--accent-ink);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .team-info strong{ display:block; font-size: .92rem; }
+    .team-info a{ font-size: .82rem; color: var(--text-soft); font-family: var(--font-mono); }
+    .team-info a:hover{ color: var(--accent); }
+    .preferred-tag{
+      font-family: var(--font-mono);
+      font-size: .68rem;
+      font-weight: 600;
+      color: var(--teal);
+      border: 1px solid var(--teal);
+      border-radius: 999px;
+      padding: .1em .6em;
+      margin-left: 8px;
+    }
+  </style>
 </head>
 <body>
 
   <div id="navbar-placeholder"></div>
 
   <section class="simple-page">
-    <span class="eyebrow">Contact</span>
-    <h1>Get in touch</h1>
-    <p>Found a missing question paper, a bug, or want to contribute? Reach out — we usually reply within a day or two.</p>
+    <span class="eyebrow" data-i18n="contact_eyebrow">Contact</span>
+    <h1 data-i18n="contact_h1">Get in touch</h1>
+    <p data-i18n="contact_sub">Found a missing question paper, a bug, or want to contribute? Reach out — we usually reply within a day or two.</p>
 
     <div class="contact-card">
-      <span>📧 threevondo@gmail.com</span>
+      <span>📧 threevondo@gmail.com <span class="preferred-tag">Preferable</span></span>
       <span>📍 University of Asia Pacific</span>
+    </div>
+
+    <div class="team-list">
+      <p class="team-heading" data-i18n="contact_team_heading">Project Team</p>
+
+      <div class="team-member">
+        <div class="team-avatar">A</div>
+        <div class="team-info">
+          <strong>Abdullah</strong>
+          <a href="mailto:24201147@uap-bd.edu">24201147@uap-bd.edu</a>
+        </div>
+      </div>
+
+      <div class="team-member">
+        <div class="team-avatar">A</div>
+        <div class="team-info">
+          <strong>Avi</strong>
+          <a href="mailto:24201165@uap-bd.edu">24201165@uap-bd.edu</a>
+        </div>
+      </div>
+
+      <div class="team-member">
+        <div class="team-avatar">D</div>
+        <div class="team-info">
+          <strong>Diya</strong>
+          <a href="mailto:24201154@uap-bd.edu">24201154@uap-bd.edu</a>
+        </div>
+      </div>
     </div>
   </section>
 
   <div id="footer-placeholder"></div>
 
   <script src="assets/js/archive-data.js"></script>
+  <script src="assets/js/i18n.js"></script>
 
   <!-- Firebase (Authentication) -->
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>

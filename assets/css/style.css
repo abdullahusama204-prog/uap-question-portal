@@ -676,6 +676,15 @@ html[data-theme="dark"] .catalog-tile .tab{ color: var(--accent-ink); background
 .file-edit-status.done{ color: var(--teal); }
 .file-edit-status.error{ color: var(--oxblood); }
 
+.upload-notice{
+  background: var(--brass-soft);
+  color: var(--accent-ink);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: .82rem;
+  font-weight: 600;
+}
+
 @media (max-width: 720px){
   .file-edit-row{ grid-template-columns: 1fr; }
   .file-edit-thumb{ width: 100%; height: 140px; }

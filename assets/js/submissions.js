@@ -118,16 +118,57 @@ window.UAPSubmissions = (function () {
     }
   }
 
-  async function review(id, status, note) {
+  // ALL approved submissions (both types), for the admin's
+  // "manage published content" panel.
+  async function getAllApproved() {
+    const database = ensureDb();
+    if (!database) return [];
+    try {
+      const snap = await database.collection("submissions").where("status", "==", "approved").get();
+      const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      list.sort((a, b) => (b.submittedAt?.toMillis?.() || 0) - (a.submittedAt?.toMillis?.() || 0));
+      return list;
+    } catch (err) {
+      console.error("getAllApproved error:", err);
+      return [];
+    }
+  }
+
+  // Admin removes a previously-approved (or any) submission entirely —
+  // it disappears from the live site immediately since questions.html /
+  // gallery.html only show submissions still present in Firestore.
+  async function deleteSubmission(id) {
+    const database = ensureDb();
+    await database.collection("submissions").doc(id).delete();
+  }
+
+  // reviewer = the admin's Firebase user object (so we can record WHO
+  // approved/rejected it — visible later in the Published Content tab
+  // and, for rejections, to the student in "My Submissions").
+  async function review(id, status, note, reviewer) {
     const database = ensureDb();
     const update = {
       status,
-      reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
+      reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      reviewedByEmail: (reviewer && reviewer.email) || null,
+      reviewedByName: (reviewer && reviewer.displayName) || null
     };
     if (note) update.reviewNote = note;
     await database.collection("submissions").doc(id).update(update);
   }
 
-  return { isAdmin, submit, getMySubmissions, getPending, getApprovedByType, review };
+  // Admin edits an already-submitted item's details (title, course,
+  // batch, folder, etc. — whatever fields you pass in `updates`).
+  // Also stamps who last edited it, for accountability.
+  async function updateSubmission(id, updates, editor) {
+    const database = ensureDb();
+    await database.collection("submissions").doc(id).update({
+      ...updates,
+      lastEditedByEmail: (editor && editor.email) || null,
+      lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+
+  return { isAdmin, submit, getMySubmissions, getPending, getApprovedByType, getAllApproved, deleteSubmission, review, updateSubmission };
 
 })();

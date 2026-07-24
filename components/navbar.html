@@ -5,9 +5,11 @@
   </div>
 
   <div class="search-box">
-    <input type="text" id="searchInput" autocomplete="off" placeholder="Search batch, CT, Mid, Final...">
+    <input type="text" id="searchInput" autocomplete="off" data-i18n-placeholder="search_placeholder" placeholder="Search semester, CT, Mid, Final...">
     <div class="search-results" id="searchResults"></div>
   </div>
+
+  <button class="lang-toggle" id="langToggle" aria-label="Switch language">🌐 বাং</button>
 
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
 
@@ -18,18 +20,18 @@
   <div class="nav-drawer" id="navLinks">
 
     <div class="nav-drawer-header">
-      <span class="nav-drawer-title">🎓 Menu</span>
+      <span class="nav-drawer-title" data-i18n="menu_title">🎓 Menu</span>
       <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
     </div>
 
     <ul class="nav-links">
-      <li><a href="index.html" data-page="index.html">Home</a></li>
-      <li><a href="previous.html" data-page="previous.html">Previous Questions</a></li>
-      <li><a href="gallery.html" data-page="gallery.html">Gallery</a></li>
-      <li><a href="bookmarks.html" data-page="bookmarks.html">🔖 Bookmarks</a></li>
-      <li><a href="upload.html" data-page="upload.html">📤 Upload</a></li>
-      <li><a href="about.html" data-page="about.html">About</a></li>
-      <li><a href="contact.html" data-page="contact.html">Contact</a></li>
+      <li><a href="index.html" data-page="index.html" data-i18n="nav_home">Home</a></li>
+      <li><a href="previous.html" data-page="previous.html" data-i18n="nav_previous">Previous Questions</a></li>
+      <li><a href="gallery.html" data-page="gallery.html" data-i18n="nav_gallery">Gallery</a></li>
+      <li><a href="bookmarks.html" data-page="bookmarks.html" data-i18n="nav_bookmarks">🔖 Bookmarks</a></li>
+      <li><a href="upload.html" data-page="upload.html" data-i18n="nav_upload">📤 Upload</a></li>
+      <li><a href="about.html" data-page="about.html" data-i18n="nav_about">About</a></li>
+      <li><a href="contact.html" data-page="contact.html" data-i18n="nav_contact">Contact</a></li>
     </ul>
 
     <div class="nav-drawer-footer" id="authArea"></div>
